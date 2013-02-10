@@ -14,7 +14,6 @@ import serverClasses.Algorithms.AlgName;
 public class RunAlgs extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private Algorithms algorithms = new Algorithms();
 
 	@Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
@@ -36,7 +35,7 @@ public class RunAlgs extends HttpServlet {
         long startTime = System.currentTimeMillis();
         if (algNameStr != null) {
         	AlgName algName = AlgName.valueOf(algNameStr);
-        	result = algorithms.executeServer(algName, parameters);
+        	result = Algorithms.executeServer(algName, parameters);
         }
 		long takenTime = System.currentTimeMillis() - startTime;
 		
