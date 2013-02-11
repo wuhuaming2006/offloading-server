@@ -6,7 +6,7 @@ public class Algorithms {
 		doSomeLoops,
 		fibonacciRecursive,
 		fibonacciIterative,
-		factorial,
+		randomArraySelectionSort,
 		isPrime
 	}
 
@@ -23,10 +23,9 @@ public class Algorithms {
 			int fiboSeqItElem = Integer.parseInt(parameters[0]); //Parsing of the input parameters
 			int resultFibIt = fibonacciIterative(fiboSeqItElem);
 			return Integer.toString(resultFibIt); //In this case, the output parameter is an Integer so casting to String is needed
-		case factorial:
-			long factorialNum = Long.parseLong(parameters[0]); //Parsing of the input parameters
-			long resultFact = factorial(factorialNum);
-			return Long.toString(resultFact); //In this case, the output parameter is a Long so casting to String is needed
+		case randomArraySelectionSort:
+			int numOfElements = Integer.parseInt(parameters[0]); //Parsing of the input parameters
+			return randomArraySelectionSort(numOfElements); //No casting needed of the output result, it is already a String
 		case isPrime:
 			int number = Integer.parseInt(parameters[0]); //Parsing of the input parameters
 			boolean isPrime = isPrime(number);
@@ -69,9 +68,26 @@ public class Algorithms {
 		return result;
 	}
 
-	public static long factorial(long number) {
-		if (number <= 1) return 1;
-		else return number * factorial(number - 1);
+	public static String randomArraySelectionSort(int n) {
+		double[] a = new double[n];
+		for (int k = 0 ; k < n ; k++) a[k] = Math.random();
+		int i, j;
+		int iMin;
+		double aux;	
+		for (j = 0; j < n-1; j++) {
+			iMin = j;
+			for ( i = j+1; i < n; i++) {
+				if (a[i] < a[iMin]) {
+					iMin = i;
+				}
+			}
+			if ( iMin != j ) {
+				aux = a[iMin];
+				a[iMin] = a[j];
+				a[j] = aux;
+			}
+		}
+		return "Done";
 	}
 
 	private static boolean isPrime(int n) {
