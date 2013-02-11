@@ -26,11 +26,11 @@ public class Algorithms {
 		case factorial:
 			long factorialNum = Long.parseLong(parameters[0]); //Parsing of the input parameters
 			long resultFact = factorial(factorialNum);
-			return Long.toString(resultFact); //In this case, the output parameter is an Integer so casting to String is needed
+			return Long.toString(resultFact); //In this case, the output parameter is a Long so casting to String is needed
 		case isPrime:
-			int number = Integer.parseInt(parameters[0]);
+			int number = Integer.parseInt(parameters[0]); //Parsing of the input parameters
 			boolean isPrime = isPrime(number);
-			return Boolean.toString(isPrime);
+			return Boolean.toString(isPrime); //In this case, the output parameter is a Boolean so casting to String is needed
 		default:
 			return "Error";
 		}
@@ -47,7 +47,7 @@ public class Algorithms {
 			return n;
 		}
 		else {
-			return fibonacciRecursive(n-1)+fibonacciRecursive(n-2);
+			return fibonacciRecursive(n - 1) + fibonacciRecursive(n - 2);
 		}
 	}
 
@@ -70,17 +70,13 @@ public class Algorithms {
 	}
 
 	public static long factorial(long number) {
-		if (number <= 1) // test for base case
-			return 1; // base cases: 0! = 1 and 1! = 1
-		else
-			// recursion step
-			return number * factorial(number - 1);
+		if (number <= 1) return 1;
+		else return number * factorial(number - 1);
 	}
 
-	private static boolean isPrime(int n){
-		for(int i=2;i<n;i++) {
-			if(n%i==0)
-				return false;
+	private static boolean isPrime(int n) {
+		for (int i = 2; i < n; i++) {
+			if (n % i == 0) return false;
 		}
 		return true;
 	}
