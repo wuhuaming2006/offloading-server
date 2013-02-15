@@ -21,8 +21,8 @@ public class Algorithms {
 			return Integer.toString(resultFibRec); //In this case, the output parameter is an Integer so casting to String is needed
 		case fibonacciIterative:
 			int fiboSeqItElem = Integer.parseInt(parameters[0]); //Parsing of the input parameters
-			int resultFibIt = fibonacciIterative(fiboSeqItElem);
-			return Integer.toString(resultFibIt); //In this case, the output parameter is an Integer so casting to String is needed
+			long resultFibIt = fibonacciIterative(fiboSeqItElem);
+			return Long.toString(resultFibIt); //In this case, the output parameter is a Long so casting to String is needed
 		case randomArraySelectionSort:
 			int numOfElements = Integer.parseInt(parameters[0]); //Parsing of the input parameters
 			return randomArraySelectionSort(numOfElements); //No casting needed of the output result, it is already a String
@@ -50,14 +50,14 @@ public class Algorithms {
 		}
 	}
 
-	private static int fibonacciIterative(int n)
+	private static long fibonacciIterative(int n)
 	{
 		if (n == 0) return 0;
 		if (n == 1) return 1;
 
-		int prevPrev = 0;
-		int prev = 1;
-		int result = 0;
+		long prevPrev = 0;
+		long prev = 1;
+		long result = 0;
 
 		for (int i = 2; i <= n; i++)
 		{
@@ -68,7 +68,7 @@ public class Algorithms {
 		return result;
 	}
 
-	public static String randomArraySelectionSort(int n) {
+	private static String randomArraySelectionSort(int n) {
 		double[] a = new double[n];
 		for (int k = 0 ; k < n ; k++) a[k] = Math.random();
 		int i, j;
