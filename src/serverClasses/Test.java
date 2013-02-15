@@ -2,6 +2,7 @@ package serverClasses;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -29,6 +30,9 @@ public class Test extends HttpServlet {
 		out.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
 		out.println("<root>");
 		out.println("	<sympathicAnswer>Server says: I have finished looping!</sympathicAnswer>");
+		out.println("	<osName>" + System.getProperty("os.name") + "</osName>");
+		out.println("	<osArch>" + System.getProperty("os.arch") + "</osArch>");
+		out.println("	<javaVersion>" + System.getProperty("java.version") + "</javaVersion>");
 		out.println("	<loopsNumber>" + i + "</loopsNumber>");
 		out.println("	<executionTime>" + takenTime + "</executionTime>");
 		out.println("</root>");
