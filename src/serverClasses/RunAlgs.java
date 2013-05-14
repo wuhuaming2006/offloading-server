@@ -32,12 +32,12 @@ public class RunAlgs extends HttpServlet {
         if (params.size() > 0) parameters = params.toArray(new String[params.size()]);
         String result = "";
         
-        long startTime = System.currentTimeMillis();
+        double startTime = ((double) System.nanoTime()) / 1000000.0;
         if (algNameStr != null) {
         	AlgName algName = AlgName.valueOf(algNameStr);
         	result = Algorithms.executeServer(algName, parameters);
         }
-		long takenTime = System.currentTimeMillis() - startTime;
+    	double takenTime = ((double) System.nanoTime()) / 1000000.0 - startTime;
 		
 		out.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
 		out.println("<root>");
