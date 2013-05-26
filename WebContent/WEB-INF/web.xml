@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
   <display-name>offload</display-name>
-  
   <welcome-file-list>
     <welcome-file>index.html</welcome-file>
     <welcome-file>index.htm</welcome-file>
@@ -10,25 +9,36 @@
     <welcome-file>default.htm</welcome-file>
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
-
   <servlet>
-	<servlet-name>testServlet</servlet-name>
-	<servlet-class>serverClasses.Test</servlet-class>
+    <servlet-name>testServlet</servlet-name>
+    <servlet-class>serverClasses.Test</servlet-class>
   </servlet>
-
   <servlet-mapping>
-	<servlet-name>testServlet</servlet-name>
-	<url-pattern>/test</url-pattern>
+    <servlet-name>testServlet</servlet-name>
+    <url-pattern>/test</url-pattern>
   </servlet-mapping>
-  
   <servlet>
-	<servlet-name>runAlgs</servlet-name>
-	<servlet-class>serverClasses.RunAlgs</servlet-class>
+    <servlet-name>loginCheck</servlet-name>
+    <servlet-class>serverClasses.LoginCheck</servlet-class>
   </servlet>
-
   <servlet-mapping>
-	<servlet-name>runAlgs</servlet-name>
-	<url-pattern>/run</url-pattern>
+    <servlet-name>loginCheck</servlet-name>
+    <url-pattern>/management/loginCheck</url-pattern>
   </servlet-mapping>
-    
+  <servlet>
+    <servlet-name>uploadFile</servlet-name>
+    <servlet-class>serverClasses.UploadFile</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>uploadFile</servlet-name>
+    <url-pattern>/management/uploadFile</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>runAlgs</servlet-name>
+    <servlet-class>serverClasses.RunAlgs</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>runAlgs</servlet-name>
+    <url-pattern>/run</url-pattern>
+  </servlet-mapping>
 </web-app>
