@@ -13,14 +13,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileItemFactory;
-import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+
+import serverClasses.Algorithms.AlgName;
+
+
 
 public class UploadFile extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
+	private static final String SRC_DIRECTORY = "/home/joan/PFC/git-offloading-server/src/";
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -32,15 +35,12 @@ public class UploadFile extends HttpServlet {
 
 		response.setContentType("text/html");
 		PrintWriter out = response.getWriter();
-
-		out.println("The files where correctly uploaded<br/>");
-
+		out.println("<br>The files where correctly uploaded</br>");
 		boolean isMultipartContent = ServletFileUpload.isMultipartContent(request);
 		if (!isMultipartContent) {
-			out.println("You are not trying to upload<br/>");
+			out.println("<br>You are not trying to upload<br>");
 			return;
 		}
-
 		DiskFileItemFactory factory = new DiskFileItemFactory();
 		ServletFileUpload upload = new ServletFileUpload(factory);
 
@@ -52,8 +52,26 @@ public class UploadFile extends HttpServlet {
 			List<FileItem> fields = upload.parseRequest(request);
 			Iterator<FileItem> it = fields.iterator();
 			FileItem fileItem = it.next();
-			File uploadedFile = new File("/home/joan/Proves/",fileItem.getName());
+			//TODO when uploading
+			File uploadedFile = new File(SRC_DIRECTORY,fileItem.getName());
+			//File uploadedFile = new File(servletContext.getRealPath("/")+ "/WEB-INF/classes/",fileItem.getName());
+			String fileName = fileItem.getName();
+			String newAlgName = fileName.split("\\.")[0];
+			String extension = fileName.split("\\.")[1];
 			fileItem.write(uploadedFile);
+			if(extension.equals("zip")) {
+				//Unzip the file
+				Unzip unzip = new Unzip();
+				//TODO when uploading
+				System.out.println("going to unzip the filename" + fileName);
+				//FIXME aixo es el que detecta la carpeta i el que potser ha de canviar!
+				unzip.unzipToFile(SRC_DIRECTORY+fileName, SRC_DIRECTORY+newAlgName);
+				//this.unZipIt(fileItem.getName(), "servletContext.getRealPath("/")+ "/WEB-INF/classes/"+fileItem.getName()");
+				//out.println("<br>The path with RealPath is" + servletContext.getRealPath("/") + "</br>");
+				uploadedFile.delete();
+				fileName = newAlgName;
+			}
+			writeAlgorithmsFile(fileName, newAlgName);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -87,6 +105,14 @@ public class UploadFile extends HttpServlet {
 			e.printStackTrace();
 		}*/
 	}
+
+	private void writeAlgorithmsFile(String fileName, String newAlgName) throws IOException {
+//		FileUtilities fu = new FileUtilities();
+//		String packageName = fu.getPackageFromClassOrDirectory(SRC_DIRECTORY + fileName);
+//		System.out.println("The package name is" + packageName);
+	}
+
+
 }
 
 

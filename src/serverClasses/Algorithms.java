@@ -15,10 +15,10 @@ public class Algorithms {
 		case doSomeLoops:
 			long nLoops = Long.parseLong(parameters[0]); //Parsing of the input parameters
 			return doSomeLoops(nLoops); //No casting needed of the output result, it is already a String
-		case fibonacciRecursive:
-			int fiboSeqRecElem = Integer.parseInt(parameters[0]); //Parsing of the input parameters
-			int resultFibRec = fibonacciRecursive(fiboSeqRecElem);
-			return Integer.toString(resultFibRec); //In this case, the output parameter is an Integer so casting to String is needed
+//		case fibonacciRecursive:
+//			int fiboSeqRecElem = Integer.parseInt(parameters[0]); //Parsing of the input parameters
+//			int resultFibRec = FibonacciRecursive.fibonacciRecursive(fiboSeqRecElem);
+//			return Integer.toString(resultFibRec); //In this case, the output parameter is an Integer so casting to String is needed
 		case fibonacciIterative:
 			int fiboSeqItElem = Integer.parseInt(parameters[0]); //Parsing of the input parameters
 			long resultFibIt = fibonacciIterative(fiboSeqItElem);
@@ -39,15 +39,6 @@ public class Algorithms {
 		long i = 0;
 		while (i < nLoops) i++;
 		return "Done";
-	}
-
-	private static int fibonacciRecursive(int n) {
-		if (n < 2) {
-			return n;
-		}
-		else {
-			return fibonacciRecursive(n - 1) + fibonacciRecursive(n - 2);
-		}
 	}
 
 	private static long fibonacciIterative(int n)
