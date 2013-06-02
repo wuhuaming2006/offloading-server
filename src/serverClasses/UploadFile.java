@@ -16,14 +16,10 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
-import serverClasses.Algorithms.AlgName;
-
-
-
 public class UploadFile extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private static final String SRC_DIRECTORY = "/home/joan/PFC/git-offloading-server/src/";
+	private static final String CLASSES_DIR = "/home/joan/PFC/git-offloading-server/src/";
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -49,29 +45,38 @@ public class UploadFile extends HttpServlet {
 		factory.setRepository(repository);
 
 		try {
+			boolean theFileAlreadyExists;
 			List<FileItem> fields = upload.parseRequest(request);
 			Iterator<FileItem> it = fields.iterator();
 			FileItem fileItem = it.next();
 			//TODO when uploading
-			File uploadedFile = new File(SRC_DIRECTORY,fileItem.getName());
 			//File uploadedFile = new File(servletContext.getRealPath("/")+ "/WEB-INF/classes/",fileItem.getName());
 			String fileName = fileItem.getName();
-			String newAlgName = fileName.split("\\.")[0];
+			String packageName = fileName.split("\\.")[0];
 			String extension = fileName.split("\\.")[1];
-			fileItem.write(uploadedFile);
-			if(extension.equals("zip")) {
+			if (extension.equals("zip")) {
+				File exists = new File(CLASSES_DIR+packageName);
+				theFileAlreadyExists = exists.exists();
+				if (theFileAlreadyExists) System.out.println("The file " + CLASSES_DIR + fileItem.getName() + " exists");
+				else System.out.println("The file " + CLASSES_DIR + fileItem.getName() + " does not exists");
+				File uploadedFile = new File(CLASSES_DIR,fileItem.getName());
+				fileItem.write(uploadedFile);
 				//Unzip the file
 				Unzip unzip = new Unzip();
 				//TODO when uploading
 				System.out.println("going to unzip the filename" + fileName);
 				//FIXME aixo es el que detecta la carpeta i el que potser ha de canviar!
-				unzip.unzipToFile(SRC_DIRECTORY+fileName, SRC_DIRECTORY+newAlgName);
+				unzip.unzipToFile(CLASSES_DIR+fileName, CLASSES_DIR);
 				//this.unZipIt(fileItem.getName(), "servletContext.getRealPath("/")+ "/WEB-INF/classes/"+fileItem.getName()");
 				//out.println("<br>The path with RealPath is" + servletContext.getRealPath("/") + "</br>");
 				uploadedFile.delete();
-				fileName = newAlgName;
+				fileName = packageName;
+				if (theFileAlreadyExists==false)writeAlgorithmsFile(fileName, packageName);
 			}
-			writeAlgorithmsFile(fileName, newAlgName);
+			else {
+				//TODO 
+				System.out.println("Error: The file is not a .zip file");
+			}
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -106,10 +111,10 @@ public class UploadFile extends HttpServlet {
 		}*/
 	}
 
-	private void writeAlgorithmsFile(String fileName, String newAlgName) throws IOException {
-//		FileUtilities fu = new FileUtilities();
-//		String packageName = fu.getPackageFromClassOrDirectory(SRC_DIRECTORY + fileName);
-//		System.out.println("The package name is" + packageName);
+	private void writeAlgorithmsFile(String fileName, String packageName) throws Exception {
+		FileUtilities fu = new FileUtilities();
+		System.out.println("The package name is " + packageName);
+		fu.addPackageAndAlgName(packageName, "parseAndCall");
 	}
 
 

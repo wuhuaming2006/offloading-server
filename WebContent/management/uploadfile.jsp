@@ -6,6 +6,14 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link href="style.css" media="screen" rel="Stylesheet" type="text/css">
 <title>Upload File</title>
+<script type="text/javascript">
+
+function arxiuOnChange() {
+	if (document.getElementById("botoChooseFile").value.length == 0) document.getElementById("botoUpload").disabled = true; 
+	else document.getElementById("botoUpload").disabled = false;
+}
+
+</script>
 </head>
 <body>
 	<h1>WELCOME</h1>
@@ -13,11 +21,11 @@
 	<form action="uploadFile" enctype="multipart/form-data" method="post">
 		
 		<p>
-			Please specify a file, or a set of files:<br> <input type="file"
-				name="datafile" size="40">
+			Please specify a file, or a set of files:<br> <input id="botoChooseFile" type="file"
+				name="datafile" size="40" onchange="arxiuOnChange()">
 		</p>
 		<div>
-			<input type="submit" value="Upload">
+			<input id="botoUpload" type="submit" value="Upload" disabled>
 		</div>
 	</form>
 </body>
