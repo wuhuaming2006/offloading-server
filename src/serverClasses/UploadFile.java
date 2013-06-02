@@ -1,8 +1,12 @@
 package serverClasses;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -11,6 +15,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.tools.JavaCompiler;
+import javax.tools.ToolProvider;
 
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
@@ -19,7 +25,6 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 public class UploadFile extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private static final String CLASSES_DIR = "/home/joan/PFC/git-offloading-server/src/";
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -31,7 +36,10 @@ public class UploadFile extends HttpServlet {
 
 		response.setContentType("text/html");
 		PrintWriter out = response.getWriter();
-		out.println("<br>The files where correctly uploaded</br>");
+		
+		//TODO canviar aquest titol, fer un jsp que informi si tot va be i pregunti pel seguent pas, i un jsp pels errors
+		out.println("<html><head><title>ALL RIGHT... ODER NICHT</title></head><body>");
+		
 		boolean isMultipartContent = ServletFileUpload.isMultipartContent(request);
 		if (!isMultipartContent) {
 			out.println("<br>You are not trying to upload<br>");
@@ -39,6 +47,8 @@ public class UploadFile extends HttpServlet {
 		}
 		DiskFileItemFactory factory = new DiskFileItemFactory();
 		ServletFileUpload upload = new ServletFileUpload(factory);
+		
+		String CLASSES_DIR = getServletContext().getRealPath("/") + "WEB-INF/classes/";
 
 		ServletContext servletContext = this.getServletConfig().getServletContext();
 		File repository = (File) servletContext.getAttribute("javax.servlet.context.tempdir");
@@ -71,7 +81,40 @@ public class UploadFile extends HttpServlet {
 				//out.println("<br>The path with RealPath is" + servletContext.getRealPath("/") + "</br>");
 				uploadedFile.delete();
 				fileName = packageName;
-				if (theFileAlreadyExists==false)writeAlgorithmsFile(fileName, packageName);
+				//TODO que no es digui serverClasses
+				if (!theFileAlreadyExists) writeAlgorithmsFile(fileName, packageName, CLASSES_DIR + "serverClasses/");
+				
+				out.println("<br>The files where correctly uploaded<br>");
+				
+				String compRes;
+				//TODO ajuntar aquestes vars amb la var general de CLASSES_DIR
+				String fileToCompile = getServletContext().getRealPath("/") + "WEB-INF/classes/serverClasses/Algorithms.java";
+				String pathToClasses = getServletContext().getRealPath("/") + "WEB-INF/classes";
+				JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+				//TODO borrar els logs
+				FileOutputStream errorStream = new FileOutputStream(getServletContext().getRealPath("/") + "WEB-INF/classes/serverClasses/CompilationLogs.txt");
+				int compilationResult = compiler.run(null, null, errorStream, "-verbose", "-classpath", pathToClasses, fileToCompile);
+				if (compilationResult == 0) compRes = "Compilation is successful";
+				else compRes = "Compilation Failed";
+				
+				out.println("<br>compRes: " + compRes + "</br>");
+				
+				URL url;
+				//TODO Leave only the first option of this if-else once local testing is not needed anymore
+				if (request.getServerName().contains("fu-berlin")) url = new URL("http://localhost:8180/manager/reload?path=/offload");
+				else url = new URL("http://localhost:8080/manager/text/reload?path=/offload");
+				URLConnection urlConn = url.openConnection();
+
+				String userPass = "martigriera:m4rT.n1;"; //username:password
+				String basicAuth = "Basic " + javax.xml.bind.DatatypeConverter.printBase64Binary(userPass.getBytes());
+				urlConn.setRequestProperty ("Authorization", basicAuth);
+				
+				InputStream inSt = urlConn.getInputStream();
+				String htmlAnswer = UploadFile.convertStreamToString(inSt);
+				inSt.close();
+				
+				out.println("<br>htmlAnswer: " + htmlAnswer + "</br>");
+				
 			}
 			else {
 				//TODO 
@@ -81,40 +124,20 @@ public class UploadFile extends HttpServlet {
 		catch (Exception e) {
 			e.printStackTrace();
 		}
-		/*while (it.hasNext()) {
-				out.println("<tr>");
-				FileItem fileItem = it.next();
-				boolean isFormField = fileItem.isFormField();
-				if (isFormField) {
-					out.println("<td>regular form field</td><td>FIELD NAME: " + fileItem.getFieldName() + 
-							"<br/>STRING: " + fileItem.getString()
-							);
-					out.println("</td>");
-				} else {
-					out.println("<td>file form field</td><td>FIELD NAME: " + fileItem.getFieldName() +
-							"<br/>STRING: " + fileItem.getString() +
-							"<br/>NAME: " + fileItem.getName() +
-							"<br/>CONTENT TYPE: " + fileItem.getContentType() +
-							"<br/>SIZE (BYTES): " + fileItem.getSize() +
-							"<br/>TEMP DIRECTORY : " + System.getProperty("java.io.tmpdir") +
-							"<br/>TO STRING: " + fileItem.toString()
-							);
-					out.println("</td>");
-				}
-				File uploadedFile = new File("/home/joan/Proves/","lol2.java");
-			    fileItem.write(uploadedFile);
-				out.println("</tr>");
-			}
-			out.println("</table>");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}*/
+		
+		out.println("</body></html>");
 	}
 
-	private void writeAlgorithmsFile(String fileName, String packageName) throws Exception {
+	//FIXME static?
+	private void writeAlgorithmsFile(String fileName, String packageName, String classesDir) throws Exception {
 		FileUtilities fu = new FileUtilities();
 		System.out.println("The package name is " + packageName);
-		fu.addPackageAndAlgName(packageName, "parseAndCall");
+		fu.addPackageAndAlgName(packageName, "ParseAndCall", classesDir);
+	}
+	
+	private static String convertStreamToString(InputStream is) {
+	    java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
+	    return s.hasNext() ? s.next() : "";
 	}
 
 

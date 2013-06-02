@@ -15,10 +15,10 @@ public class Algorithms {
 		case doSomeLoops:
 			long nLoops = Long.parseLong(parameters[0]); //Parsing of the input parameters
 			return doSomeLoops(nLoops); //No casting needed of the output result, it is already a String
-//		case fibonacciRecursive:
-//			int fiboSeqRecElem = Integer.parseInt(parameters[0]); //Parsing of the input parameters
-//			int resultFibRec = FibonacciRecursive.fibonacciRecursive(fiboSeqRecElem);
-//			return Integer.toString(resultFibRec); //In this case, the output parameter is an Integer so casting to String is needed
+		case fibonacciRecursive:
+			int fiboSeqRecElem = Integer.parseInt(parameters[0]); //Parsing of the input parameters
+			int resultFibRec = fibonacciRecursive(fiboSeqRecElem);
+			return Integer.toString(resultFibRec); //In this case, the output parameter is an Integer so casting to String is needed
 		case fibonacciIterative:
 			int fiboSeqItElem = Integer.parseInt(parameters[0]); //Parsing of the input parameters
 			long resultFibIt = fibonacciIterative(fiboSeqItElem);
@@ -41,8 +41,16 @@ public class Algorithms {
 		return "Done";
 	}
 
-	private static long fibonacciIterative(int n)
-	{
+	private static int fibonacciRecursive(int n) {
+		if (n < 2) {
+			return n;
+		}
+		else {
+			return fibonacciRecursive(n - 1) + fibonacciRecursive(n - 2);
+		}
+	}
+
+	private static long fibonacciIterative(int n) {
 		if (n == 0) return 0;
 		if (n == 1) return 1;
 
@@ -50,8 +58,7 @@ public class Algorithms {
 		long prev = 1;
 		long result = 0;
 
-		for (int i = 2; i <= n; i++)
-		{
+		for (int i = 2; i <= n; i++) {
 			result = prev + prevPrev;
 			prevPrev = prev;
 			prev = result;
@@ -64,7 +71,7 @@ public class Algorithms {
 		for (int k = 0 ; k < n ; k++) a[k] = Math.random();
 		int i, j;
 		int iMin;
-		double aux;	
+		double aux;    
 		for (j = 0; j < n-1; j++) {
 			iMin = j;
 			for ( i = j+1; i < n; i++) {
