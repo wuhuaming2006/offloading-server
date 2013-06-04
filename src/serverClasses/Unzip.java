@@ -13,7 +13,7 @@ public class Unzip {
 	private final static int BUFFER_SIZE = 2048;
 	private final static String ZIP_EXTENSION = ".zip";
 	
-	public boolean unzipToFile(String srcZipFileName, String destDirectoryName) {
+	public boolean unzipToFile (String srcZipFileName, String destDirectoryName) {
 
 		try {
 			
@@ -26,16 +26,16 @@ public class Unzip {
 			File file = new File(srcZipFileName);
 			ZipFile zipFile = new ZipFile(file, ZipFile.OPEN_READ);
 
-			//for every zip archive entry do
+			// for every zip archive entry do
 			Enumeration<? extends ZipEntry> zipFileEntries = zipFile.entries();
 			while (zipFileEntries.hasMoreElements()) {
 				ZipEntry entry = (ZipEntry) zipFileEntries.nextElement();
 				System.out.println("\tExtracting entry: " + entry);
 
-				//create destination file
+				// create destination file
 				File destFile = new File(destDirectory, entry.getName());
 
-				//create parent directories if needed
+				// create parent directories if needed
 				File parentDestFile = destFile.getParentFile();    
 				parentDestFile.mkdirs();    
 

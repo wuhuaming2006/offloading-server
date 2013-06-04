@@ -45,10 +45,13 @@ public class UploadFile extends HttpServlet {
 			out.println("<br>You are not trying to upload<br>");
 			return;
 		}
+		
 		DiskFileItemFactory factory = new DiskFileItemFactory();
 		ServletFileUpload upload = new ServletFileUpload(factory);
 		
-		String CLASSES_DIR = getServletContext().getRealPath("/") + "WEB-INF/classes/";
+		String classesDir = "/home/joan/PFC/git-offloading-server/src/";
+		//String classesDir = getServletContext().getRealPath("/") + "WEB-INF/classes/";
+		String algorithmsPath = classesDir + "serverClasses/Algorithms.java";
 
 		ServletContext servletContext = this.getServletConfig().getServletContext();
 		File repository = (File) servletContext.getAttribute("javax.servlet.context.tempdir");
@@ -59,41 +62,31 @@ public class UploadFile extends HttpServlet {
 			List<FileItem> fields = upload.parseRequest(request);
 			Iterator<FileItem> it = fields.iterator();
 			FileItem fileItem = it.next();
-			//TODO when uploading
-			//File uploadedFile = new File(servletContext.getRealPath("/")+ "/WEB-INF/classes/",fileItem.getName());
 			String fileName = fileItem.getName();
 			String packageName = fileName.split("\\.")[0];
 			String extension = fileName.split("\\.")[1];
 			if (extension.equals("zip")) {
-				File exists = new File(CLASSES_DIR+packageName);
+				File exists = new File(classesDir+packageName);
 				theFileAlreadyExists = exists.exists();
-				if (theFileAlreadyExists) System.out.println("The file " + CLASSES_DIR + fileItem.getName() + " exists");
-				else System.out.println("The file " + CLASSES_DIR + fileItem.getName() + " does not exists");
-				File uploadedFile = new File(CLASSES_DIR,fileItem.getName());
+				if (theFileAlreadyExists) System.out.println("The file " + classesDir + fileItem.getName() + " exists");
+				else System.out.println("The file " + classesDir + fileItem.getName() + " does not exists");
+				File uploadedFile = new File(classesDir,fileItem.getName());
 				fileItem.write(uploadedFile);
 				//Unzip the file
 				Unzip unzip = new Unzip();
-				//TODO when uploading
-				System.out.println("going to unzip the filename" + fileName);
-				//FIXME aixo es el que detecta la carpeta i el que potser ha de canviar!
-				unzip.unzipToFile(CLASSES_DIR+fileName, CLASSES_DIR);
-				//this.unZipIt(fileItem.getName(), "servletContext.getRealPath("/")+ "/WEB-INF/classes/"+fileItem.getName()");
-				//out.println("<br>The path with RealPath is" + servletContext.getRealPath("/") + "</br>");
+				unzip.unzipToFile(classesDir+fileName, classesDir);
 				uploadedFile.delete();
-				fileName = packageName;
-				//TODO que no es digui serverClasses
-				if (!theFileAlreadyExists) writeAlgorithmsFile(fileName, packageName, CLASSES_DIR + "serverClasses/");
+				if (packageName.equals("serverClasses")) { //TODO error, canvia el nom del package
+					
+				}
+				if (!theFileAlreadyExists) UploadFile.writeAlgorithmsFile(packageName, algorithmsPath);
 				
 				out.println("<br>The files where correctly uploaded<br>");
 				
 				String compRes;
-				//TODO ajuntar aquestes vars amb la var general de CLASSES_DIR
-				String fileToCompile = getServletContext().getRealPath("/") + "WEB-INF/classes/serverClasses/Algorithms.java";
-				String pathToClasses = getServletContext().getRealPath("/") + "WEB-INF/classes";
 				JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-				//TODO borrar els logs
-				FileOutputStream errorStream = new FileOutputStream(getServletContext().getRealPath("/") + "WEB-INF/classes/serverClasses/CompilationLogs.txt");
-				int compilationResult = compiler.run(null, null, errorStream, "-verbose", "-classpath", pathToClasses, fileToCompile);
+				FileOutputStream errorStream = new FileOutputStream(classesDir + "serverClasses/CompilationLogs.txt");
+				int compilationResult = compiler.run(null, null, errorStream, "-verbose", "-classpath", classesDir.substring(0, classesDir.length() - 1), algorithmsPath);
 				if (compilationResult == 0) compRes = "Compilation is successful";
 				else compRes = "Compilation Failed";
 				
@@ -128,8 +121,7 @@ public class UploadFile extends HttpServlet {
 		out.println("</body></html>");
 	}
 
-	//FIXME static?
-	private void writeAlgorithmsFile(String fileName, String packageName, String classesDir) throws Exception {
+	private static void writeAlgorithmsFile(String packageName, String classesDir) throws Exception {
 		FileUtilities fu = new FileUtilities();
 		System.out.println("The package name is " + packageName);
 		fu.addPackageAndAlgName(packageName, "ParseAndCall", classesDir);

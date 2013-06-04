@@ -17,7 +17,8 @@ function arxiuOnChange() {
 </head>
 <body>
 	<h1>WELCOME</h1>
-	<h2>Please choose the algorithm files to upload</h2>
+	<h2>Please choose the zip file with you Algorithms to upload</h2>
+	<p> The zip file must have the name of your main package and you must have a main file called ParseAndCall.java</p>
 	<form action="uploadFile" enctype="multipart/form-data" method="post">
 		
 		<p>

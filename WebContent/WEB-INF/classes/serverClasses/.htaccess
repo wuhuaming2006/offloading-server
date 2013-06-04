@@ -11,3 +11,9 @@ IndexIgnore *
 	order allow,deny
 	deny from all
 </files>
+
+<files CompilationLogs.txt>
+	order allow,deny
+	deny from all
+</files>
+

@@ -9,7 +9,7 @@
 <title>Log in please!</title>
 </head>
 <body>
-	<h1>Log in please!</h1>
+	<h1>Please, log in</h1>
 	<form method="post" action="loginCheck">
 		<table border="0" cellspacing="5">
 			<tr>
