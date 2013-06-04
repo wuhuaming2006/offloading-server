@@ -36,7 +36,7 @@ public class UploadFile extends HttpServlet {
 		
 		boolean isMultipartContent = ServletFileUpload.isMultipartContent(request);
 		if (!isMultipartContent) {
-			response.sendRedirect("/offload/management/err.jsp");
+			response.sendRedirect("/offload/management/error.jsp?err=0");
 			//"The form you sent does not have the expected contents"
 			return;
 		}
@@ -65,10 +65,12 @@ public class UploadFile extends HttpServlet {
 		String extension = fileName.split("\\.")[1];
 		if (packageName.equals("serverClasses")) {
 			//This package name is not allowed
+			response.sendRedirect("/offload/management/error.jsp?err=1");
 			return;
 		}
 		if (!extension.equals("zip")) {
 			//"The file is not a .zip file"
+			response.sendRedirect("/offload/management/error.jsp?err=2&filename="+fileName);
 			return;
 		}
 		
@@ -93,6 +95,7 @@ public class UploadFile extends HttpServlet {
 		int compilationResult = compiler.run(null, null, errorStream, "-verbose", "-classpath", classesDir.substring(0, classesDir.length() - 1), algorithmsPath);
 		if (compilationResult != 0) {
 			//"Compiling Algorithms.java failed (after adding the new algorithm case corresponding to your package)"
+			response.sendRedirect("/offload/management/error.jsp?err=3");
 			return;
 		}
 		
@@ -112,10 +115,12 @@ public class UploadFile extends HttpServlet {
 		
 		if (!reloadAnswer.contains("OK")) {
 			//"The webapp could not be reloaded"
+			response.sendRedirect("/offload/management/error.jsp?err=4");
 			return;
 		}
-				
-		request.setAttribute("alreadyExists", true);
+		
+		//TODO 
+		//si tot be... depen alreadyExists dir uploaded i prou o afegir updated
 		
 	}
 	
