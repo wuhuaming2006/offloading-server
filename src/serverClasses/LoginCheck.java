@@ -13,16 +13,14 @@ public class LoginCheck extends HttpServlet {
        
     @Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+    	doPost(request, response);
 	}
 
     @Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.setContentType("text/html");
-        //PrintWriter out = response.getWriter();
         String userName = request.getParameter("username");
         String password = request.getParameter("password");
-        if (userName.equals("joe") && password.equals("indian")) { 
+        if (userName.equals("joe") && password.equals("indian")) {
         	request.getRequestDispatcher("/management/uploadfile.jsp").forward(request, response);
         }
         else {

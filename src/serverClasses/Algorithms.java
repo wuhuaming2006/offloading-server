@@ -3,7 +3,6 @@ package serverClasses;
 public class Algorithms {
 
 	public static enum AlgName {
-		verdures,
 		doSomeLoops,
 		fibonacciRecursive,
 		fibonacciIterative,
@@ -13,8 +12,6 @@ public class Algorithms {
 
 	public static String executeServer(AlgName algName, String... parameters) {
 		switch (algName) {
-		case verdures:
-			return verdures.ParseAndCall.parseAndCall(parameters);
 		case doSomeLoops:
 			long nLoops = Long.parseLong(parameters[0]); //Parsing of the input parameters
 			return doSomeLoops(nLoops); //No casting needed of the output result, it is already a String
@@ -45,22 +42,16 @@ public class Algorithms {
 	}
 
 	private static int fibonacciRecursive(int n) {
-		if (n < 2) {
-			return n;
-		}
-		else {
-			return fibonacciRecursive(n - 1) + fibonacciRecursive(n - 2);
-		}
+		if (n < 2) return n;
+		else return fibonacciRecursive(n - 1) + fibonacciRecursive(n - 2);
 	}
 
 	private static long fibonacciIterative(int n) {
 		if (n == 0) return 0;
 		if (n == 1) return 1;
-
 		long prevPrev = 0;
 		long prev = 1;
 		long result = 0;
-
 		for (int i = 2; i <= n; i++) {
 			result = prev + prevPrev;
 			prevPrev = prev;
@@ -78,11 +69,9 @@ public class Algorithms {
 		for (j = 0; j < n-1; j++) {
 			iMin = j;
 			for ( i = j+1; i < n; i++) {
-				if (a[i] < a[iMin]) {
-					iMin = i;
-				}
+				if (a[i] < a[iMin]) iMin = i;
 			}
-			if ( iMin != j ) {
+			if (iMin != j) {
 				aux = a[iMin];
 				a[iMin] = a[j];
 				a[j] = aux;
