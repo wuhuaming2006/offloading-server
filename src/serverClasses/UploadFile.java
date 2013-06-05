@@ -14,7 +14,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
 
@@ -35,17 +34,16 @@ public class UploadFile extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		HttpSession session = request.getSession();
-		if (session.getAttribute("logged") == null) {
+		if (request.getSession().getAttribute("loginDone") == null) {
 			//"You must log in order to access the management area"
-			response.sendRedirect("/offload/management/error.jsp?err=-1");
+			response.sendRedirect("/offload/management/error.jsp");
 			return;
 		}
 		
 		boolean isMultipartContent = ServletFileUpload.isMultipartContent(request);
 		if (!isMultipartContent) {
 			//"The form you sent does not have the expected contents"
-			response.sendRedirect("/offload/management/error.jsp?err=0");
+			response.sendRedirect("/offload/management/error.jsp?err=1");
 			return;
 		}
 		
@@ -73,12 +71,12 @@ public class UploadFile extends HttpServlet {
 		String extension = fileName.split("\\.")[1];
 		if (packageName.equals("serverClasses")) {
 			//This package name is not allowed
-			response.sendRedirect("/offload/management/error.jsp?err=1");
+			response.sendRedirect("/offload/management/error.jsp?err=2");
 			return;
 		}
 		if (!extension.equals("zip")) {
 			//"The file is not a .zip file"
-			response.sendRedirect("/offload/management/error.jsp?err=2&filename="+fileName);
+			response.sendRedirect("/offload/management/error.jsp?err=3&filename="+fileName);
 			return;
 		}
 		
@@ -103,7 +101,7 @@ public class UploadFile extends HttpServlet {
 		int compilationResult = compiler.run(null, null, errorStream, "-verbose", "-classpath", classesDir.substring(0, classesDir.length() - 1), algorithmsPath);
 		if (compilationResult != 0) {
 			//"Compiling Algorithms.java failed (after adding the new algorithm case corresponding to your package)"
-			response.sendRedirect("/offload/management/error.jsp?err=3");
+			response.sendRedirect("/offload/management/error.jsp?err=4");
 			return;
 		}
 		
@@ -115,7 +113,7 @@ public class UploadFile extends HttpServlet {
 
 		String userPass = "martigriera:m4rT.n1;"; //username:password
 		String basicAuth = "Basic " + javax.xml.bind.DatatypeConverter.printBase64Binary(userPass.getBytes());
-		urlConn.setRequestProperty ("Authorization", basicAuth);
+		urlConn.setRequestProperty("Authorization", basicAuth);
 		
 		InputStream inSt = urlConn.getInputStream();
 		String reloadAnswer = UploadFile.convertStreamToString(inSt);
@@ -123,14 +121,15 @@ public class UploadFile extends HttpServlet {
 		
 		if (!reloadAnswer.contains("OK")) {
 			//"The webapp could not be reloaded"
-			response.sendRedirect("/offload/management/error.jsp?err=4");
+			response.sendRedirect("/offload/management/error.jsp?err=5");
 			return;
 		}
-		else{
-			if (!theFileAlreadyExists) response.sendRedirect("/offload/management/correctlyuploaded.jsp?newFile=1");
-			else response.sendRedirect("/offload/management/correctlyuploaded.jsp?newFile=0");
-			return;
-		}
+		
+		request.getSession().setAttribute("uploadDone", true);
+		
+		if (theFileAlreadyExists) response.sendRedirect("/offload/management/correctlyuploaded.jsp?newFile=0");
+		else response.sendRedirect("/offload/management/correctlyuploaded.jsp?newFile=1");
+		
 	}
 	
 	private static String convertStreamToString(InputStream is) {

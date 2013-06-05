@@ -1,4 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%
+	if (request.getSession().getAttribute("loginDone") != null) {
+		getServletContext().getRequestDispatcher("/management/uploadfile.jsp").forward(request, response);
+		return;
+	}
+%>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -25,9 +31,9 @@
 			</table>
 		</form>
 		<%
-			if (request.getAttribute("wrongPass") != null) {
+			if (request.getParameter("invUserPass") != null) {
 		%>
-		<h3>Wrong password, please try again</h3>
+		<h3 class="error">Wrong password, please try again</h3>
 		<%
 			}
 		%>

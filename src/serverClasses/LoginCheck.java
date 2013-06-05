@@ -22,13 +22,11 @@ public class LoginCheck extends HttpServlet {
         String userName = request.getParameter("username");
         String password = request.getParameter("password");
         HttpSession session = request.getSession();
-        if (userName.equals("joe") && password.equals("indian")) {
-        	session.setAttribute("logged", true);
-        	request.getRequestDispatcher("/management/uploadfile.jsp").forward(request, response);
+        if (userName != null && userName.equals("joe") && password != null && password.equals("indian")) {
+        	session.setAttribute("loginDone", true);
+        	response.sendRedirect("/offload/management/uploadfile.jsp");
         }
-        else {
-        	request.setAttribute("wrongPass", true);
-        	getServletContext().getRequestDispatcher("/management/index.jsp").forward(request, response);
-         }
+        else response.sendRedirect("/offload/management/index.jsp?invUserPass=1");
     }
+    
 }
