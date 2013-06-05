@@ -100,7 +100,7 @@ public class UploadFile extends HttpServlet {
 		}
 		
 		URL url;
-		//TODO Leave only the first option of this if-else once local testing is not needed anymore
+		//FIXME Leave only the first option of this if-else once local testing is not needed anymore
 		if (request.getServerName().contains("fu-berlin")) url = new URL("http://localhost:8180/manager/reload?path=/offload");
 		else url = new URL("http://localhost:8080/manager/text/reload?path=/offload");
 		URLConnection urlConn = url.openConnection();
