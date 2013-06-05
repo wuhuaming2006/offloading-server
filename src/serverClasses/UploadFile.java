@@ -118,10 +118,11 @@ public class UploadFile extends HttpServlet {
 			response.sendRedirect("/offload/management/error.jsp?err=4");
 			return;
 		}
-		
-		//TODO 
-		//si tot be... depen alreadyExists dir uploaded i prou o afegir updated
-		
+		else{
+			if (!theFileAlreadyExists) response.sendRedirect("/offload/management/correctlyuploaded.jsp?newFile=1");
+			else response.sendRedirect("/offload/management/correctlyuploaded.jsp?newFile=0");
+			return;
+		}
 	}
 	
 	private static String convertStreamToString(InputStream is) {
