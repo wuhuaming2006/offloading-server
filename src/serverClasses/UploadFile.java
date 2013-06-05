@@ -36,8 +36,8 @@ public class UploadFile extends HttpServlet {
 		
 		boolean isMultipartContent = ServletFileUpload.isMultipartContent(request);
 		if (!isMultipartContent) {
-			response.sendRedirect("/offload/management/error.jsp?err=0");
 			//"The form you sent does not have the expected contents"
+			response.sendRedirect("/offload/management/error.jsp?err=0");
 			return;
 		}
 		
