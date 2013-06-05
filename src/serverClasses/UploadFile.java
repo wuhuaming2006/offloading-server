@@ -14,6 +14,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
 
@@ -33,6 +34,13 @@ public class UploadFile extends HttpServlet {
 
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		HttpSession session = request.getSession();
+		if (session.getAttribute("logged") == null) {
+			//"You must log in order to access the management area"
+			response.sendRedirect("/offload/management/error.jsp?err=-1");
+			return;
+		}
 		
 		boolean isMultipartContent = ServletFileUpload.isMultipartContent(request);
 		if (!isMultipartContent) {

@@ -25,8 +25,7 @@
 			</table>
 		</form>
 		<%
-			Boolean wrongPassword = (Boolean) request.getAttribute("wrongPass");
-			if (wrongPassword != null) {
+			if (request.getAttribute("wrongPass") != null) {
 		%>
 		<h3>Wrong password, please try again</h3>
 		<%
