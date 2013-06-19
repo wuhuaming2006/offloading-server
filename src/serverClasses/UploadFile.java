@@ -127,8 +127,8 @@ public class UploadFile extends HttpServlet {
 		
 		request.getSession().setAttribute("uploadDone", true);
 		
-		if (theFileAlreadyExists) response.sendRedirect("/offload/management/correctlyuploaded.jsp?newFile=0");
-		else response.sendRedirect("/offload/management/correctlyuploaded.jsp?newFile=1");
+		if (theFileAlreadyExists) response.sendRedirect("/offload/management/formCost.jsp?newFile=0");
+		else response.sendRedirect("/offload/management/formCost.jsp?newFile=1");
 		
 	}
 	

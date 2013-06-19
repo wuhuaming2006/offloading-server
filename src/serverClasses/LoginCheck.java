@@ -24,7 +24,7 @@ public class LoginCheck extends HttpServlet {
         HttpSession session = request.getSession();
         if (userName != null && userName.equals("joe") && password != null && password.equals("indian")) {
         	session.setAttribute("loginDone", true);
-        	response.sendRedirect("/offload/management/uploadfile.jsp");
+        	response.sendRedirect("/offload/management/uploadFile.jsp");
         }
         else response.sendRedirect("/offload/management/index.jsp?invUserPass=1");
     }
