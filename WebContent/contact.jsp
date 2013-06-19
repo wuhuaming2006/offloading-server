@@ -35,8 +35,8 @@
 			</div>
 			<div id="content">
 				<h2>Contact</h2>
-				<p>MartÃ­ Griera Jorba: <script type="text/javascript">writeEmailAddress("martigri", "era@ze", "dat.fu-berlin.de");</script>, <script type="text/javascript">writeEmailAddress("wart", "iw@gm", "ail.com");</script></p>
-				<p>Joan MartÃ­nez Ripoll: <script type="text/javascript">writeEmailAddress("yuangm", "r@gma", "il.com");</script></p>
+				<p>Martí­ Griera Jorba: <script type="text/javascript">writeEmailAddress("martigri", "era@ze", "dat.fu-berlin.de");</script>, <script type="text/javascript">writeEmailAddress("wart", "iw@gm", "ail.com");</script></p>
+				<p>Joan Martínez Ripoll: <script type="text/javascript">writeEmailAddress("yuangm", "r@gma", "il.com");</script></p>
 			</div>
 			<div id="footer">Freie Universität Berlin, 2013</div>
 		</div>
