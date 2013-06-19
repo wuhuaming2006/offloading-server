@@ -120,7 +120,7 @@ public class UploadFile extends HttpServlet {
 		inSt.close();
 		
 		if (!reloadAnswer.contains("OK")) {
-			//"The webapp could not be reloaded"
+			//"The WebApp could not be reloaded"
 			response.sendRedirect("/offload/management/error.jsp?err=5");
 			return;
 		}

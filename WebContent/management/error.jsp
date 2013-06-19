@@ -3,42 +3,66 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title>An error was found</title>
-		<link href="style.css" media="screen" rel="Stylesheet" type="text/css">
+		<link href="../css/style.css" media="screen" rel="Stylesheet" type="text/css">
+		<title>Management area - An error was found</title>
 	</head>
 	<body>
-		<h1>An error was found</h1>
-		<%
-			if (request.getSession().getAttribute("loginDone") == null) {
-		%>
-		<h3 class="error">You must log in order to access the management area</h3>
-		<%
-			} else if (request.getAttribute("firstUpload") != null) {
-		%>
-		<h3 class="error">You must first upload before accessing this page</h3>
-		<%
-			} else if (request.getParameter("err").equals("1")) {
-		%>
-		<h3 class="error">The form you sent does not have the expected contents</h3>
-		<%
-			} else if (request.getParameter("err").equals("2")) {
-		%>
-		<h3 class="error">The package you are trying to upload is named serverClasses, this is not a valid package name</h3>
-		<%
-			} else if (request.getParameter("err").equals("3")) {
-				String algName = request.getParameter("filename");
-		%>
-		<h3 class="error">The file <%=algName%> that you are trying to upload is not a .zip file</h3>
-		<%
-			} else if (request.getParameter("err").equals("4")) {
-		%>
-		<h3 class="error">Compiling Algorithms.java failed (after adding the new algorithm case corresponding to your package)</h3>
-		<%
-			} else if (request.getParameter("err").equals("5")) {
-		%>
-		<h3 class="error">The webapp could not be reloaded</h3>
-		<%
-			}
-		%>
+		<div id="container">
+			<div id="header">
+				<h1>Android mobile devices computation offloading project</h1>
+			</div>
+			<div id="navigation">
+				<ul>
+					<li><a href="../index.jsp">Home</a></li>
+					<li><a href="#">Management</a></li>
+					<li><a href="../test" rel="nofollow">Test1</a></li>
+					<li><a href="../run?algName=doSomeLoops&param1=20000000" rel="nofollow">Test2</a></li>
+					<li><a href="../contact.jsp">Contact us</a></li>
+					<%
+						if (request.getSession().getAttribute("loginDone") != null) {
+					%>
+					<li><a href="../logout">Logout</a></li>
+					<%
+						}
+					%>
+				</ul>
+			</div>
+			<div id="content">
+				<h2>Management area - An error was found</h2>
+				<%
+					if (request.getSession().getAttribute("loginDone") == null) {
+				%>
+				<p class="error">You must log in order to access the management area</p>
+				<%
+					} else if (request.getAttribute("firstUpload") != null) {
+				%>
+				<p class="error">You must first upload before accessing this page</p>
+				<%
+					} else if (request.getParameter("err").equals("1")) {
+				%>
+				<p class="error">The form you sent does not have the expected contents</p>
+				<%
+					} else if (request.getParameter("err").equals("2")) {
+				%>
+				<p class="error">The package you are trying to upload is named serverClasses, this is not a valid package name</p>
+				<%
+					} else if (request.getParameter("err").equals("3")) {
+						String algName = request.getParameter("filename");
+				%>
+				<p class="error">The file <%=algName%> that you are trying to upload is not a .zip file</p>
+				<%
+					} else if (request.getParameter("err").equals("4")) {
+				%>
+				<p class="error">Compiling Algorithms.java failed (after adding the new algorithm case corresponding to your package)</p>
+				<%
+					} else if (request.getParameter("err").equals("5")) {
+				%>
+				<p class="error">The WebApp could not be reloaded</p>
+				<%
+					}
+				%>
+			</div>
+			<div id="footer">Freie Universität Berlin, 2013</div>
+		</div>
 	</body>
 </html>

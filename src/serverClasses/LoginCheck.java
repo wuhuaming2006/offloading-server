@@ -21,12 +21,18 @@ public class LoginCheck extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String userName = request.getParameter("username");
         String password = request.getParameter("password");
+        if (userName == null) userName = "";
+        if (password == null) password = "";
         HttpSession session = request.getSession();
-        if (userName != null && userName.equals("joe") && password != null && password.equals("indian")) {
+        if (userName.equals("katinka") && password.equals("admin")) {
         	session.setAttribute("loginDone", true);
         	response.sendRedirect("/offload/management/uploadFile.jsp");
         }
-        else response.sendRedirect("/offload/management/index.jsp?invUserPass=1");
+        else {
+        	session.setAttribute("userName", userName);
+        	session.setAttribute("password", password);
+        	response.sendRedirect("/offload/management/index.jsp?invUserPass=1");
+        }
     }
     
 }
