@@ -11,10 +11,14 @@ import javax.servlet.http.HttpServletResponse;
 public class Test extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
+	
+	@Override
+	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		doGet(request, response);
+	}
 
 	@Override
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
-    {
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         //response.setContentType("text/xml;charset=UTF-8");
         response.setContentType("text/xml");
         PrintWriter out = response.getWriter();

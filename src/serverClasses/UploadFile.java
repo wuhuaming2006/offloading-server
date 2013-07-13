@@ -51,8 +51,8 @@ public class UploadFile extends HttpServlet {
 		ServletFileUpload upload = new ServletFileUpload(factory);
 		
 		//FIXME String classesDir = "/home/joan/PFC/git-offloading-server/src/";
-		String classesDir = getServletContext().getRealPath("/") + "WEB-INF/classes/";
-		String algorithmsPath = classesDir + "serverClasses/Algorithms.java";
+		String classesDir = getServletContext().getRealPath(File.separator) + "WEB-INF" + File.separatorChar + "classes" + File.separatorChar;
+		String algorithmsPath = classesDir + "serverClasses" + File.separatorChar + "Algorithms.java";
 
 		ServletContext servletContext = this.getServletConfig().getServletContext();
 		File repository = (File) servletContext.getAttribute("javax.servlet.context.tempdir");
@@ -97,7 +97,7 @@ public class UploadFile extends HttpServlet {
 		if (!theFileAlreadyExists) FileUtilities.addAlgorithm(packageName, algorithmsPath);
 		
 		JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-		FileOutputStream errorStream = new FileOutputStream(classesDir + "serverClasses/CompilationLogs.txt");
+		FileOutputStream errorStream = new FileOutputStream(classesDir + "serverClasses" + File.separatorChar + "CompilationLogs.txt");
 		int compilationResult = compiler.run(null, null, errorStream, "-verbose", "-classpath", classesDir.substring(0, classesDir.length() - 1), algorithmsPath);
 		if (compilationResult != 0) {
 			//"Compiling Algorithms.java failed (after adding the new algorithm case corresponding to your package)"
