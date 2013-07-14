@@ -98,6 +98,7 @@ public class UploadFile extends HttpServlet {
 		
 		JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
 		FileOutputStream errorStream = new FileOutputStream(classesDir + "serverClasses" + File.separatorChar + "CompilationLogs.txt");
+		//Even with successful compilations, the verbose output is obtained through the OutputStrean err, the third parameter
 		int compilationResult = compiler.run(null, null, errorStream, "-verbose", "-classpath", classesDir.substring(0, classesDir.length() - 1), algorithmsPath);
 		if (compilationResult != 0) {
 			//"Compiling Algorithms.java failed (after adding the new algorithm case corresponding to your package)"
