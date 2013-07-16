@@ -52,7 +52,6 @@ public class UploadFile extends HttpServlet {
 		
 		String classesDir = getServletContext().getRealPath(File.separator) + "WEB-INF" + File.separatorChar + "classes" + File.separatorChar;
 		String libsDir = getServletContext().getRealPath(File.separator) + "WEB-INF" + File.separatorChar + "lib" + File.separatorChar;
-		//String classesDir = "/home/joan/PFC/git-offloading-server/src/";
 		String algorithmsPath = classesDir + "serverClasses" + File.separatorChar + "Algorithms.java";
 
 		ServletContext servletContext = this.getServletConfig().getServletContext();
@@ -96,9 +95,15 @@ public class UploadFile extends HttpServlet {
 		if (!theFileAlreadyExists) FileUtilities.addAlgorithm(packageName, algorithmsPath);
 		
 		JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+		//The -classpath option of this compiler needs the paths to all the .jar files one by one
+		String jarPaths = classesDir.substring(0, classesDir.length() - 1); //Probably not needed, the classes directory, but then we can just add ":" + "/path/to/file.jar" again and again
+		File[] listOfFiles = (new File(libsDir)).listFiles();
+		for (int i = 0; i < listOfFiles.length; i++) {
+			if (listOfFiles[i].isFile()) jarPaths += ":" + libsDir + listOfFiles[i].getName();
+		}
 		FileOutputStream errorStream = new FileOutputStream(classesDir + "serverClasses" + File.separatorChar + "CompilationLogs.txt");
 		//Even with successful compilations, the verbose output is obtained through the OutputStrean err, the third parameter
-		int compilationResult = compiler.run(null, null, errorStream, "-verbose", "-classpath", classesDir.substring(0, classesDir.length() - 1) + ":"+libsDir+"randomName.jar", algorithmsPath);
+		int compilationResult = compiler.run(null, null, errorStream, "-verbose", "-classpath", jarPaths, algorithmsPath);
 		if (compilationResult != 0) {
 			//"Compiling Algorithms.java failed (after adding the new algorithm case corresponding to your package)"
 			response.sendRedirect("/offload/management/error.jsp?err=4");

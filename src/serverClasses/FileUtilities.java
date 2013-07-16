@@ -21,6 +21,8 @@ public class FileUtilities {
 			String thisLine = "";
 			while ((thisLine = in.readLine()) != null) {
 				out.println(thisLine);
+				//TODO This is for testing!!!!
+				//TODO We need to detect the names of the algorithms in whatever class file the user indicates
 				if (thisLine.contains("public static enum AlgName {")) out.println("\t\tdoSomeLoops2,");
 				if (thisLine.contains("switch (algName) {")) {
 					out.println("\t\tcase doSomeLoops2:");
