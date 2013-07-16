@@ -50,8 +50,9 @@ public class UploadFile extends HttpServlet {
 		DiskFileItemFactory factory = new DiskFileItemFactory();
 		ServletFileUpload upload = new ServletFileUpload(factory);
 		
-		//FIXME String classesDir = "/home/joan/PFC/git-offloading-server/src/";
 		String classesDir = getServletContext().getRealPath(File.separator) + "WEB-INF" + File.separatorChar + "classes" + File.separatorChar;
+		String libsDir = getServletContext().getRealPath(File.separator) + "WEB-INF" + File.separatorChar + "lib" + File.separatorChar;
+		//String classesDir = "/home/joan/PFC/git-offloading-server/src/";
 		String algorithmsPath = classesDir + "serverClasses" + File.separatorChar + "Algorithms.java";
 
 		ServletContext servletContext = this.getServletConfig().getServletContext();
@@ -69,37 +70,35 @@ public class UploadFile extends HttpServlet {
 		String fileName = fileItem.getName();
 		String packageName = fileName.split("\\.")[0];
 		String extension = fileName.split("\\.")[1];
+		//TODO ja no cal mirar q es digui serverClasses
+		//TODO caldria mirar q el .jar o es digui com cap de les 3 libs q tenim al principi
 		if (packageName.equals("serverClasses")) {
 			//This package name is not allowed
 			response.sendRedirect("/offload/management/error.jsp?err=2");
 			return;
 		}
-		if (!extension.equals("zip")) {
-			//"The file is not a .zip file"
+		if (!extension.equals("jar")) {
+			//"The file is not a .jar file"
 			response.sendRedirect("/offload/management/error.jsp?err=3&filename="+fileName);
 			return;
 		}
 		
-		File packageDir = new File(classesDir + packageName);
+		File packageDir = new File(libsDir + packageName);
 		boolean theFileAlreadyExists = packageDir.exists();
 	
-		File uploadedFile = new File(classesDir, fileName);
+		File uploadedFile = new File(libsDir, fileName);
 		try {
 			fileItem.write(uploadedFile);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		Unzip unzip = new Unzip();
-		unzip.unzipToFile(classesDir + fileName, classesDir);
-		uploadedFile.delete();
-		
 		if (!theFileAlreadyExists) FileUtilities.addAlgorithm(packageName, algorithmsPath);
 		
 		JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
 		FileOutputStream errorStream = new FileOutputStream(classesDir + "serverClasses" + File.separatorChar + "CompilationLogs.txt");
 		//Even with successful compilations, the verbose output is obtained through the OutputStrean err, the third parameter
-		int compilationResult = compiler.run(null, null, errorStream, "-verbose", "-classpath", classesDir.substring(0, classesDir.length() - 1), algorithmsPath);
+		int compilationResult = compiler.run(null, null, errorStream, "-verbose", "-classpath", classesDir.substring(0, classesDir.length() - 1) + ":"+libsDir+"randomName.jar", algorithmsPath);
 		if (compilationResult != 0) {
 			//"Compiling Algorithms.java failed (after adding the new algorithm case corresponding to your package)"
 			response.sendRedirect("/offload/management/error.jsp?err=4");

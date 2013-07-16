@@ -49,7 +49,7 @@
 					} else if (request.getParameter("err").equals("3")) {
 						String algName = request.getParameter("filename");
 				%>
-				<p class="error">The file <%=algName%> that you are trying to upload is not a .zip file</p>
+				<p class="error">The file <%=algName%> that you are trying to upload is not a .jar file</p>
 				<%
 					} else if (request.getParameter("err").equals("4")) {
 				%>

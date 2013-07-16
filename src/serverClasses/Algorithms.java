@@ -4,8 +4,6 @@ public class Algorithms {
 
 	public static enum AlgName {
 		doSomeLoops,
-		doSomeLoops2,
-		doublingOf,
 		fibonacciRecursive,
 		fibonacciIterative,
 		randomArraySelectionSort,
@@ -17,10 +15,6 @@ public class Algorithms {
 		case doSomeLoops:
 			long nLoops = Long.parseLong(parameters[0]); //Parsing of the input parameters
 			return doSomeLoops(nLoops); //No casting needed of the output result, it is already a String
-		case doSomeLoops2:
-			return vegetables.Zucchini.doSomeLoops2(parameters);
-		case doublingOf:
-			return vegetables.Zucchini.doublingOf(parameters);
 		case fibonacciIterative:
 			return de.fuberlin.enginetesting.SimpleAlgs.fibonacciIterative(parameters);
 		case fibonacciRecursive:

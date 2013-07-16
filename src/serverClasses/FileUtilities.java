@@ -21,12 +21,12 @@ public class FileUtilities {
 			String thisLine = "";
 			while ((thisLine = in.readLine()) != null) {
 				out.println(thisLine);
-				if (thisLine.contains("public static enum AlgName {")) out.println("\t\t" + packageName + ",");
+				if (thisLine.contains("public static enum AlgName {")) out.println("\t\tdoSomeLoops2,");
 				if (thisLine.contains("switch (algName) {")) {
-					out.println("\t\tcase " + packageName + ":");
-					out.println("\t\t\treturn " + packageName + ".ParseAndCall.parseAndCall(parameters);");
+					out.println("\t\tcase doSomeLoops2:");
+					out.println("\t\t\treturn vegetables.Zucchini.doSomeLoops2(parameters);");
 				}
-			}
+			}		
 			out.flush();
 			out.close();
 			in.close();
