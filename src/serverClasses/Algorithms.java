@@ -3,6 +3,8 @@ package serverClasses;
 public class Algorithms {
 
 	public static enum AlgName {
+		doublingOf,
+		doSomeLoops2,
 		doSomeLoops,
 		fibonacciRecursive,
 		fibonacciIterative,
@@ -12,6 +14,10 @@ public class Algorithms {
 
 	public static String executeServer(AlgName algName, String... parameters) {
 		switch (algName) {
+		case doublingOf:
+			return vegetables.Zucchini.doublingOf(parameters);
+		case doSomeLoops2:
+			return vegetables.Zucchini.doSomeLoops2(parameters);
 		case doSomeLoops:
 			long nLoops = Long.parseLong(parameters[0]); //Parsing of the input parameters
 			return doSomeLoops(nLoops); //No casting needed of the output result, it is already a String

@@ -38,13 +38,17 @@
 				%>
 				<p class="error">You must first upload before accessing this page</p>
 				<%
+					} else if (request.getAttribute("noJar") != null) {
+				%>
+				<p class="error">No .jar file was previously uploaded</p>
+				<%
 					} else if (request.getParameter("err").equals("1")) {
 				%>
 				<p class="error">The form you sent does not have the expected contents</p>
 				<%
 					} else if (request.getParameter("err").equals("2")) {
 				%>
-				<p class="error">The package you are trying to upload is named serverClasses, this is not a valid package name</p>
+				<p class="error">The .jar file you are trying to upload is has a not a valid name</p>
 				<%
 					} else if (request.getParameter("err").equals("3")) {
 						String algName = request.getParameter("filename");

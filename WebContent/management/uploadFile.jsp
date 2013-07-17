@@ -12,9 +12,9 @@
 		<link href="../css/style.css" media="screen" rel="Stylesheet" type="text/css">
 		<title>Management area - Upload application</title>
 		<script type="text/javascript">
-			function arxiuOnChange() {
-				if (document.getElementById("botoChooseFile").value.length == 0) document.getElementById("botoUpload").disabled = true; 
-				else document.getElementById("botoUpload").disabled = false;
+			function fileOnChange() {
+				if (document.getElementById("buttonChooseFile").value.length == 0) document.getElementById("buttonUpload").disabled = true; 
+				else document.getElementById("buttonUpload").disabled = false;
 			}
 		</script>
 	</head>
@@ -30,13 +30,7 @@
 					<li><a href="../test" rel="nofollow">Test1</a></li>
 					<li><a href="../run?algName=doSomeLoops&param1=20000000" rel="nofollow">Test2</a></li>
 					<li><a href="../contact.jsp">Contact us</a></li>
-					<%
-						if (request.getSession().getAttribute("loginDone") != null) {
-					%>
 					<li><a href="../logout">Logout</a></li>
-					<%
-						}
-					%>
 				</ul>
 			</div>
 			<div id="content">
@@ -50,8 +44,8 @@
 					<li>Your package can contain any number of sub-packages or resources.</li>
 				</ul>
 				<form action="uploadFile" enctype="multipart/form-data" method="post">
-					<p><input id="botoChooseFile" type="file" name="datafile" size="40" onchange="arxiuOnChange()"></p>
-					<p><input id="botoUpload" type="submit" value="Upload" disabled></p>
+					<p><input id="buttonChooseFile" type="file" name="datafile" size="40" onchange="fileOnChange()"></p>
+					<p><input id="buttonUpload" type="submit" value="Upload" disabled></p>
 				</form>
 			</div>
 			<div id="footer">Freie Universität Berlin, 2013</div>

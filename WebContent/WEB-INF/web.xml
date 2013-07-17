@@ -44,4 +44,12 @@
     <servlet-name>runAlgs</servlet-name>
     <url-pattern>/run</url-pattern>
   </servlet-mapping>
+   <servlet>
+    <servlet-name>UpdAndCompAlgs</servlet-name>
+    <servlet-class>serverClasses.UpdAndCompAlgs</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>UpdAndCompAlgs</servlet-name>
+    <url-pattern>/management/updAndCompAlgs</url-pattern>
+  </servlet-mapping>
 </web-app>

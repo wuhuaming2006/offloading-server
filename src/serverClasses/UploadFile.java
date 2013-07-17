@@ -6,8 +6,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.jar.JarFile;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -33,7 +35,9 @@ public class UploadFile extends HttpServlet {
 
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+		//String libsDir = getServletContext().getRealPath(File.separator) + "WEB-INF" + File.separatorChar + "lib" + File.separatorChar;
+		String libsDir = "/home/joan/PFC/git-offloading-server/WebContent/WEB-INF/lib/";
+
 		if (request.getSession().getAttribute("loginDone") == null) {
 			//"You must log in order to access the management area"
 			response.sendRedirect("/offload/management/error.jsp");
@@ -50,10 +54,6 @@ public class UploadFile extends HttpServlet {
 		DiskFileItemFactory factory = new DiskFileItemFactory();
 		ServletFileUpload upload = new ServletFileUpload(factory);
 		
-		String classesDir = getServletContext().getRealPath(File.separator) + "WEB-INF" + File.separatorChar + "classes" + File.separatorChar;
-		String libsDir = getServletContext().getRealPath(File.separator) + "WEB-INF" + File.separatorChar + "lib" + File.separatorChar;
-		String algorithmsPath = classesDir + "serverClasses" + File.separatorChar + "Algorithms.java";
-
 		ServletContext servletContext = this.getServletConfig().getServletContext();
 		File repository = (File) servletContext.getAttribute("javax.servlet.context.tempdir");
 		factory.setRepository(repository);
@@ -67,16 +67,12 @@ public class UploadFile extends HttpServlet {
 		Iterator<FileItem> it = fields.iterator();
 		FileItem fileItem = it.next();
 		String fileName = fileItem.getName();
-		String packageName = fileName.split("\\.")[0];
-		String extension = fileName.split("\\.")[1];
-		//TODO ja no cal mirar q es digui serverClasses
-		//TODO caldria mirar q el .jar o es digui com cap de les 3 libs q tenim al principi
-		if (packageName.equals("serverClasses")) {
-			//This package name is not allowed
-			response.sendRedirect("/offload/management/error.jsp?err=2");
-			return;
-		}
-		if (!extension.equals("jar")) {
+		String extension = fileName.substring(fileName.length()-4);
+		String packageName = fileName.substring(0, fileName.length()-4);
+		
+		if(!checkValidJarName(fileName))response.sendRedirect("/offload/management/error.jsp?err=2");
+				
+		if (!extension.equals(".jar")) {
 			//"The file is not a .jar file"
 			response.sendRedirect("/offload/management/error.jsp?err=3&filename="+fileName);
 			return;
@@ -92,54 +88,30 @@ public class UploadFile extends HttpServlet {
 			e.printStackTrace();
 		}
 		
-		if (!theFileAlreadyExists) FileUtilities.addAlgorithm(packageName, algorithmsPath);
-		
-		JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-		//The -classpath option of this compiler needs the paths to all the .jar files one by one
-		String jarPaths = classesDir.substring(0, classesDir.length() - 1); //Probably not needed, the classes directory, but then we can just add ":" + "/path/to/file.jar" again and again
-		File[] listOfFiles = (new File(libsDir)).listFiles();
-		for (int i = 0; i < listOfFiles.length; i++) {
-			if (listOfFiles[i].isFile()) jarPaths += ":" + libsDir + listOfFiles[i].getName();
+		JarFile jFile = new JarFile(uploadedFile);
+		ArrayList<String> classNames = null;
+		try {
+			classNames = JarUtilities.getClassNames(jFile);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		FileOutputStream errorStream = new FileOutputStream(classesDir + "serverClasses" + File.separatorChar + "CompilationLogs.txt");
-		//Even with successful compilations, the verbose output is obtained through the OutputStrean err, the third parameter
-		int compilationResult = compiler.run(null, null, errorStream, "-verbose", "-classpath", jarPaths, algorithmsPath);
-		if (compilationResult != 0) {
-			//"Compiling Algorithms.java failed (after adding the new algorithm case corresponding to your package)"
-			response.sendRedirect("/offload/management/error.jsp?err=4");
-			return;
-		}
-		
-		URL url;
-		//FIXME Leave only the first option of this if-else once local testing is not needed anymore
-		if (request.getServerName().contains("fu-berlin")) url = new URL("http://localhost:8180/manager/reload?path=/offload");
-		else url = new URL("http://localhost:8080/manager/text/reload?path=/offload");
-		URLConnection urlConn = url.openConnection();
-
-		String userPass = "martigriera:m4rT.n1;"; //username:password
-		String basicAuth = "Basic " + javax.xml.bind.DatatypeConverter.printBase64Binary(userPass.getBytes());
-		urlConn.setRequestProperty("Authorization", basicAuth);
-		
-		InputStream inSt = urlConn.getInputStream();
-		String reloadAnswer = UploadFile.convertStreamToString(inSt);
-		inSt.close();
-		
-		if (!reloadAnswer.contains("OK")) {
-			//"The WebApp could not be reloaded"
-			response.sendRedirect("/offload/management/error.jsp?err=5");
-			return;
-		}
-		
-		request.getSession().setAttribute("uploadDone", true);
-		
-		if (theFileAlreadyExists) response.sendRedirect("/offload/management/formCost.jsp?newFile=0");
-		else response.sendRedirect("/offload/management/formCost.jsp?newFile=1");
+		request.getSession().setAttribute("jarName", fileName);
+		request.getSession().setAttribute("classNames", classNames);
+		if (theFileAlreadyExists) response.sendRedirect("/offload/management/selectClass.jsp?newFile=0");
+		else response.sendRedirect("/offload/management/selectClass.jsp?newFile=1");
 		
 	}
-	
-	private static String convertStreamToString(InputStream is) {
-	    java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
-	    return s.hasNext() ? s.next() : "";
+
+	private boolean checkValidJarName(String packageName) {
+		
+		if (packageName.equals("asm-4.1.jar") ||
+				packageName.equals("asm-tree-4.1.jar") ||
+				packageName.equals("commons-fileupload-1.3.jar") ||
+				packageName.equals("commons-io-2.4.jar") ||
+				packageName.equals("servlet-api.jar"))	return false;
+		return true;
+		
 	}
 
 }
