@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 	if (request.getSession().getAttribute("loginDone") != null) {
-		getServletContext().getRequestDispatcher("/management/uploadFile.jsp").forward(request, response);
+		getServletContext().getRequestDispatcher("/management/menu.jsp").forward(request, response);
 		return;
 	}
 %>

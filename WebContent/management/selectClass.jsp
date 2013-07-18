@@ -5,9 +5,10 @@
 		getServletContext().getRequestDispatcher("/management/error.jsp").forward(request, response);
 		return;
 	}
-	ArrayList<String> classNames = (ArrayList<String>) request.getSession().getAttribute("classNames");
-	if (classNames == null) {
-		request.setAttribute("noJar", true);
+	ArrayList<String> classNames = null;
+	Object auxObject = request.getSession().getAttribute("classNames");
+	if (auxObject != null) classNames = (ArrayList<String>) auxObject;
+	else {
 		getServletContext().getRequestDispatcher("/management/error.jsp").forward(request, response);
 		return;
 	}
@@ -17,7 +18,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link href="../css/style.css" media="screen" rel="Stylesheet" type="text/css">
-		<title>Management area - Select the algorithms class</title>
+		<title>Management area - Select the algorithms Java class</title>
 		<script type="text/javascript">
 			function selectOnChange() {
 				if (document.getElementById("classNamesSelect").value == null) document.getElementById("buttonSelectClass").disabled = true; 
@@ -41,22 +42,21 @@
 				</ul>
 			</div>
 			<div id="content">
-				<h2>Management area - Select the algorithms class</h2>
-					<%
+				<h2>Management area - Select the algorithms Java class</h2>
+				<%
 					if (request.getParameter("newFile") != null) {
 						if (request.getParameter("newFile").equals("1")) {
 				%>
-				<p class="allRight">The new application has been successfully uploaded.</p>
+				<p class="allRight">The new JAR file has been successfully uploaded.</p>
 				<%
 						} else {
 				%>
-				<p class="allRight">The application has been successfully updated.</p>
+				<p class="allRight">A JAR file with the same name has been found. It has been successfully updated.</p>
 				<%
 						}
 					}
 				%>
-				
-				<p>Please select the class with all the algoriths</p>
+				<p>In the following box you can find a list with all the Java classes contained in the JAR file that you just uploaded. Please select the class containing the parse of the String input parameters and call to the methods to be executed in this server.</p>
 				<form method="post" action="updAndCompAlgs">
 				<% 
 					if (classNames.size() < 15) {

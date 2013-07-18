@@ -1,11 +1,7 @@
 package serverClasses;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -16,8 +12,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.tools.JavaCompiler;
-import javax.tools.ToolProvider;
 
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
@@ -35,8 +29,8 @@ public class UploadFile extends HttpServlet {
 
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
 		String libsDir = getServletContext().getRealPath(File.separator) + "WEB-INF" + File.separatorChar + "lib" + File.separatorChar;
-		//String libsDir = "/home/joan/PFC/git-offloading-server/WebContent/WEB-INF/lib/";
 
 		if (request.getSession().getAttribute("loginDone") == null) {
 			//"You must log in order to access the management area"
@@ -45,9 +39,9 @@ public class UploadFile extends HttpServlet {
 		}
 		
 		boolean isMultipartContent = ServletFileUpload.isMultipartContent(request);
-		if (!isMultipartContent) {
-			//"The form you sent does not have the expected contents"
-			response.sendRedirect("/offload/management/error.jsp?err=1");
+		if (!isMultipartContent) { //The form sent does not have the expected contents
+			//"Invalid access attempt"
+			response.sendRedirect("/offload/management/error.jsp");
 			return;
 		}
 		
@@ -69,19 +63,19 @@ public class UploadFile extends HttpServlet {
 		String fileName = fileItem.getName();
 		String extension = fileName.substring(fileName.length()-4);
 			
-		if(checkValidJarName(fileName)==false) {
-			response.sendRedirect("/offload/management/error.jsp?err=2");
+		if (!checkValidJarName(fileName)) {
+			response.sendRedirect("/offload/management/error.jsp?err=1");
 			return;
 		}
 				
 		if (!extension.equals(".jar")) {
 			//"The file is not a .jar file"
-			response.sendRedirect("/offload/management/error.jsp?err=3&filename="+fileName);
+			response.sendRedirect("/offload/management/error.jsp?err=2&filename=" + fileName);
 			return;
 		}
 		
-		File packageDir = new File(libsDir + fileName);
-		boolean theFileAlreadyExists = packageDir.exists();
+		File jarToUpload = new File(libsDir + fileName);
+		boolean theFileAlreadyExists = jarToUpload.exists();
 	
 		File uploadedFile = new File(libsDir, fileName);
 		try {
@@ -93,10 +87,11 @@ public class UploadFile extends HttpServlet {
 		JarFile jFile = new JarFile(uploadedFile);
 		ArrayList<String> classNames = null;
 		try {
-			classNames = JarUtilities.getClassNames(jFile);
+			classNames = JarUtilities.getClassNamesInJar(jFile);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
 		request.getSession().setAttribute("jarName", fileName);
 		request.getSession().setAttribute("classNames", classNames);
 		
@@ -106,16 +101,12 @@ public class UploadFile extends HttpServlet {
 	}
 
 	private boolean checkValidJarName(String jarName) {
-		
-		
-		System.out.println("The name is " + jarName);
 		if (jarName.equals("asm-4.1.jar") ||
-				jarName.equals("asm-tree-4.1.jar") ||
-				jarName.equals("commons-fileupload-1.3.jar") ||
-				jarName.equals("commons-io-2.4.jar") ||
-				jarName.equals("servlet-api.jar"))return false;
+			jarName.equals("asm-tree-4.1.jar") ||
+			jarName.equals("commons-fileupload-1.3.jar") ||
+			jarName.equals("commons-io-2.4.jar") ||
+			jarName.equals("servlet-api.jar")) return false;
 		return true;
-		
 	}
 
 }

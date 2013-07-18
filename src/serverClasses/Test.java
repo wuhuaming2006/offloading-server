@@ -19,7 +19,6 @@ public class Test extends HttpServlet {
 
 	@Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        //response.setContentType("text/xml;charset=UTF-8");
         response.setContentType("text/xml");
         PrintWriter out = response.getWriter();
         String nLoopsStr = request.getParameter("nLoops");

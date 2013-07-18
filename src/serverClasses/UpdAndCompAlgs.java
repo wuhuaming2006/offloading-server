@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -35,36 +34,31 @@ public class UpdAndCompAlgs extends HttpServlet {
 			return;
 		}
 		
-		String selectedClass = (request.getParameter("classNamesSelect"));
-		String jarName = (String) request.getSession().getAttribute("jarName");
+		String selectedClass = request.getParameter("classNamesSelect");
+		Object jarNameObj = request.getSession().getAttribute("jarName");
+		if (selectedClass == null || jarNameObj == null) {
+			//"Invalid access attempt"
+			response.sendRedirect("/offload/management/error.jsp");
+			return;
+		}
+		String jarName = (String) jarNameObj;
 		
 		String classesDir = getServletContext().getRealPath(File.separator) + "WEB-INF" + File.separatorChar + "classes" + File.separatorChar;
-		//String classesDir = "/home/joan/PFC/git-offloading-server/src/";
 		String libsDir = getServletContext().getRealPath(File.separator) + "WEB-INF" + File.separatorChar + "lib" + File.separatorChar;
-		//String libsDir = "/home/joan/PFC/git-offloading-server/WebContent/WEB-INF/lib/";
-		
 		String algorithmsPath = classesDir + "serverClasses" + File.separatorChar + "Algorithms.java";
 		
-		
 		File uploadedFile = new File(libsDir, jarName);
-		JarFile jFile = new JarFile ( uploadedFile);
+		JarFile jFile = new JarFile(uploadedFile);
 			
-		ArrayList<String> methods= null;
+		ArrayList<String> methods = null;
 		try {
-			methods = JarUtilities.getMethodsFromClassInJarFile(jFile, selectedClass.replace(".", "/")+".class");
+			methods = JarUtilities.getMethodsFromClassInJar(jFile, selectedClass.replace(".", "/") + ".class");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		for(int i =1 ; i<methods.size();i++){
-			FileUtilities.removeAlgorithm(methods.get(i), algorithmsPath);
-			
-		}		
-
-		for(int i =1 ; i<methods.size();i++){
-			FileUtilities.addAlgorithm(methods.get(i),selectedClass, algorithmsPath);
-			
-		}
+		for (int i = 1; i < methods.size(); i++) FileUtilities.removeAlgorithm(methods.get(i), algorithmsPath);
+		for (int i = 1; i < methods.size(); i++) FileUtilities.addAlgorithm(methods.get(i), selectedClass, algorithmsPath);
 			
 		JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
 		//The -classpath option of this compiler needs the paths to all the .jar files one by one
@@ -78,7 +72,7 @@ public class UpdAndCompAlgs extends HttpServlet {
 		int compilationResult = compiler.run(null, null, errorStream, "-verbose", "-classpath", jarPaths, algorithmsPath);
 		if (compilationResult != 0) {
 			//"Compiling Algorithms.java failed (after adding the new algorithm case corresponding to your package)"
-			response.sendRedirect("/offload/management/error.jsp?err=4");
+			response.sendRedirect("/offload/management/error.jsp?err=3");
 			return;
 		}
 		
@@ -98,13 +92,12 @@ public class UpdAndCompAlgs extends HttpServlet {
 		
 		if (!reloadAnswer.contains("OK")) {
 			//"The WebApp could not be reloaded"
-			response.sendRedirect("/offload/management/error.jsp?err=5");
+			response.sendRedirect("/offload/management/error.jsp?err=4");
 			return;
 		}
 		
-		request.getSession().setAttribute("uploadDone", true);
-		request.getSession().setAttribute("newAlgs",methods);
-		response.sendRedirect("/offload/management/correctlyUploadedAlgs.jsp");
+		request.getSession().setAttribute("newMethods", methods);
+		response.sendRedirect("/offload/management/menu.jsp");
 		
 	}
 	

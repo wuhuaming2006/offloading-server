@@ -36,9 +36,9 @@
 				<%
 					}
 				%>
-				<p>Please, enter the Management area if you want to upload a new application.</p>
+				<p>Please, enter the Management area if you want to upload Java classes or try the automated cost estimation system.</p>
 				<p>Test1 will return some information about this server.</p>
-				<p>Test2 is an example of calling an application in this server, it will run 20 millions of iterations of a simple looping algorithm.</p>
+				<p>Test2 is an example of calling a method in this server, it will run 20 millions of iterations of a simple looping algorithm.</p>
 				<p>Keep in mind that the XML formatted data returned when clicking on Test1 or Test2 is to be interpreted by computers.</p>
 			</div>
 			<div id="footer">Freie Universität Berlin, 2013</div>

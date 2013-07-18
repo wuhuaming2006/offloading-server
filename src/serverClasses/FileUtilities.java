@@ -21,10 +21,10 @@ public class FileUtilities {
 			String thisLine = "";
 			while ((thisLine = in.readLine()) != null) {
 				out.println(thisLine);
-				if (thisLine.contains("public static enum AlgName {")) out.println("\t\t"+algorithmName+",");
+				if (thisLine.contains("public static enum AlgName {")) out.println("\t\t" + algorithmName + ",");
 				if (thisLine.contains("switch (algName) {")) {
-					out.println("\t\tcase "+algorithmName + ":");
-					out.println("\t\t\treturn " + packageName +"."+algorithmName+"(parameters);");
+					out.println("\t\tcase " + algorithmName + ":");
+					out.println("\t\t\treturn " + packageName + "." + algorithmName + "(parameters);");
 				}
 			}		
 			out.flush();
@@ -49,7 +49,10 @@ public class FileUtilities {
 			PrintWriter out = new PrintWriter(fos);
 			String thisLine = "";
 			while ((thisLine = in.readLine()) != null) {
-				if (!thisLine.contains(algorithmName)) out.println(thisLine);
+				if (!thisLine.contains(algorithmName + ",") &&
+					!thisLine.contains("case " + algorithmName + ":") &&
+					!thisLine.contains(algorithmName + "(parameters)"))
+					out.println(thisLine);
 				else System.out.println("A line was deleted");
 			}		
 			out.flush();

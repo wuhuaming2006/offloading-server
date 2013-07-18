@@ -8,14 +8,13 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 import org.objectweb.asm.ClassReader;
-import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.MethodNode;
 
 public class JarUtilities {
 
-	public static ArrayList<String> getClassNames(JarFile jarFile) throws Exception {
+	public static ArrayList<String> getClassNamesInJar(JarFile jarFile) throws Exception {
 		ArrayList<String> classNames = new ArrayList<String>();
 		Enumeration<JarEntry> entries = jarFile.entries();
 		while (entries.hasMoreElements()) {
@@ -37,9 +36,9 @@ public class JarUtilities {
 	}
 	
 	
-	public static ArrayList<String> getMethodsFromClassInJarFile(JarFile jarFile, String classEntryName) throws Exception {
+	public static ArrayList<String> getMethodsFromClassInJar(JarFile jarFile, String classEntryName) throws Exception {
 	  	Enumeration<JarEntry> entries = jarFile.entries();
-	    while (entries.hasMoreElements()) {	    	
+	    while (entries.hasMoreElements()) {
 	        JarEntry entry = entries.nextElement();
 	        String entryName = entry.getName();
 	        if (entryName.equals(classEntryName)) {

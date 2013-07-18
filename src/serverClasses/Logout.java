@@ -21,7 +21,8 @@ public class Logout extends HttpServlet {
         session.removeAttribute("loginDone");
         session.removeAttribute("userName");
         session.removeAttribute("password");
-        session.removeAttribute("uploadDone");
+        session.removeAttribute("jarName");
+        session.removeAttribute("classNames");
         
         request.setAttribute("loggedOut", true);
         getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);

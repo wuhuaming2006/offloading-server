@@ -34,33 +34,25 @@
 				%>
 				<p class="error">You must log in order to access the management area</p>
 				<%
-					} else if (request.getAttribute("firstUpload") != null) {
+					} else if (request.getParameter("err") == null) {
 				%>
-				<p class="error">You must first upload before accessing this page</p>
-				<%
-					} else if (request.getAttribute("noJar") != null) {
-				%>
-				<p class="error">No .jar file was previously uploaded</p>
+				<p class="error">Invalid access attempt</p>
 				<%
 					} else if (request.getParameter("err").equals("1")) {
 				%>
-				<p class="error">The form you sent does not have the expected contents</p>
+				<p class="error">The .jar file that you are trying to upload does not have a valid name.</p>
+				<p class="error">The names asm-4.1.jar, asm-tree-4.1.jar, commons-fileupload-1.3.jar, commons-io-2.4.jar and servlet-api.jar are not permitted.</p>
 				<%
 					} else if (request.getParameter("err").equals("2")) {
-				%>
-				<p class="error">The .jar file that you are trying to upload has a not a valid name.<br>
-				The names asm-4.1.jar, asm-tree-4.1.jar, commons-fileupload-1.3.jar, commons-io-2.4.jar and servlet-api.jar are not permitted</p>
-				<%
-					} else if (request.getParameter("err").equals("3")) {
 						String algName = request.getParameter("filename");
 				%>
 				<p class="error">The file <%=algName%> that you are trying to upload is not a .jar file</p>
 				<%
-					} else if (request.getParameter("err").equals("4")) {
+					} else if (request.getParameter("err").equals("3")) {
 				%>
 				<p class="error">Compiling Algorithms.java failed (after adding the new algorithm case corresponding to your package)</p>
 				<%
-					} else if (request.getParameter("err").equals("5")) {
+					} else if (request.getParameter("err").equals("4")) {
 				%>
 				<p class="error">The WebApp could not be reloaded</p>
 				<%
