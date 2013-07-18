@@ -35,43 +35,34 @@ public class UpdAndCompAlgs extends HttpServlet {
 			return;
 		}
 		
-		String selectedClass = (request.getParameter("classNamesSelect")).replace(".", "/")+".class";
+		String selectedClass = (request.getParameter("classNamesSelect"));
 		String jarName = (String) request.getSession().getAttribute("jarName");
 		
-		//String classesDir = getServletContext().getRealPath(File.separator) + "WEB-INF" + File.separatorChar + "classes" + File.separatorChar;
-		String classesDir = "/home/joan/PFC/git-offloading-server/src/";
-		//String libsDir = getServletContext().getRealPath(File.separator) + "WEB-INF" + File.separatorChar + "lib" + File.separatorChar;
-		String libsDir = "/home/joan/PFC/git-offloading-server/WebContent/WEB-INF/lib/";
+		String classesDir = getServletContext().getRealPath(File.separator) + "WEB-INF" + File.separatorChar + "classes" + File.separatorChar;
+		//String classesDir = "/home/joan/PFC/git-offloading-server/src/";
+		String libsDir = getServletContext().getRealPath(File.separator) + "WEB-INF" + File.separatorChar + "lib" + File.separatorChar;
+		//String libsDir = "/home/joan/PFC/git-offloading-server/WebContent/WEB-INF/lib/";
 		
 		String algorithmsPath = classesDir + "serverClasses" + File.separatorChar + "Algorithms.java";
 		
 		
 		File uploadedFile = new File(libsDir, jarName);
-		System.out.println("the file path is" + uploadedFile.getPath());
 		JarFile jFile = new JarFile ( uploadedFile);
-		
+			
 		ArrayList<String> methods= null;
 		try {
-			methods = JarUtilities.getMethodsFromClassInJarFile(jFile, selectedClass);
+			methods = JarUtilities.getMethodsFromClassInJarFile(jFile, selectedClass.replace(".", "/")+".class");
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		
-		
-		for(int i =1 ; i<methods.size();i++){
-			System.out.println("The method from " + i + " is " + methods.get(i));
-			
 		}
 		
 		for(int i =1 ; i<methods.size();i++){
 			FileUtilities.removeAlgorithm(methods.get(i), algorithmsPath);
 			
-		}
-		
+		}		
 
 		for(int i =1 ; i<methods.size();i++){
-			FileUtilities.addAlgorithm(methods.get(i),request.getParameter("classNamesSelect"), algorithmsPath);
+			FileUtilities.addAlgorithm(methods.get(i),selectedClass, algorithmsPath);
 			
 		}
 			
@@ -112,11 +103,9 @@ public class UpdAndCompAlgs extends HttpServlet {
 		}
 		
 		request.getSession().setAttribute("uploadDone", true);
+		request.getSession().setAttribute("newAlgs",methods);
+		response.sendRedirect("/offload/management/correctlyUploadedAlgs.jsp");
 		
-		response.setContentType("text/html");
-        PrintWriter out = response.getWriter();
-        out.println("TOT GUAI" + selectedClass);
-	
 	}
 	
 	private static String convertStreamToString(InputStream is) {

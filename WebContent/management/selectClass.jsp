@@ -42,7 +42,21 @@
 			</div>
 			<div id="content">
 				<h2>Management area - Select the algorithms class</h2>
-				<p>asadsad</p>
+					<%
+					if (request.getParameter("newFile") != null) {
+						if (request.getParameter("newFile").equals("1")) {
+				%>
+				<p class="allRight">The new application has been successfully uploaded.</p>
+				<%
+						} else {
+				%>
+				<p class="allRight">The application has been successfully updated.</p>
+				<%
+						}
+					}
+				%>
+				
+				<p>Please select the class with all the algoriths</p>
 				<form method="post" action="updAndCompAlgs">
 				<% 
 					if (classNames.size() < 15) {

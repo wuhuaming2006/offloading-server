@@ -48,7 +48,8 @@
 				<%
 					} else if (request.getParameter("err").equals("2")) {
 				%>
-				<p class="error">The .jar file you are trying to upload is has a not a valid name</p>
+				<p class="error">The .jar file that you are trying to upload has a not a valid name.<br>
+				The names asm-4.1.jar, asm-tree-4.1.jar, commons-fileupload-1.3.jar, commons-io-2.4.jar and servlet-api.jar are not permitted</p>
 				<%
 					} else if (request.getParameter("err").equals("3")) {
 						String algName = request.getParameter("filename");

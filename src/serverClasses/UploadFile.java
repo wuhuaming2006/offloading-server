@@ -35,8 +35,8 @@ public class UploadFile extends HttpServlet {
 
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//String libsDir = getServletContext().getRealPath(File.separator) + "WEB-INF" + File.separatorChar + "lib" + File.separatorChar;
-		String libsDir = "/home/joan/PFC/git-offloading-server/WebContent/WEB-INF/lib/";
+		String libsDir = getServletContext().getRealPath(File.separator) + "WEB-INF" + File.separatorChar + "lib" + File.separatorChar;
+		//String libsDir = "/home/joan/PFC/git-offloading-server/WebContent/WEB-INF/lib/";
 
 		if (request.getSession().getAttribute("loginDone") == null) {
 			//"You must log in order to access the management area"
@@ -68,9 +68,11 @@ public class UploadFile extends HttpServlet {
 		FileItem fileItem = it.next();
 		String fileName = fileItem.getName();
 		String extension = fileName.substring(fileName.length()-4);
-		String packageName = fileName.substring(0, fileName.length()-4);
-		
-		if(!checkValidJarName(fileName))response.sendRedirect("/offload/management/error.jsp?err=2");
+			
+		if(checkValidJarName(fileName)==false) {
+			response.sendRedirect("/offload/management/error.jsp?err=2");
+			return;
+		}
 				
 		if (!extension.equals(".jar")) {
 			//"The file is not a .jar file"
@@ -78,7 +80,7 @@ public class UploadFile extends HttpServlet {
 			return;
 		}
 		
-		File packageDir = new File(libsDir + packageName);
+		File packageDir = new File(libsDir + fileName);
 		boolean theFileAlreadyExists = packageDir.exists();
 	
 		File uploadedFile = new File(libsDir, fileName);
@@ -93,23 +95,25 @@ public class UploadFile extends HttpServlet {
 		try {
 			classNames = JarUtilities.getClassNames(jFile);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		request.getSession().setAttribute("jarName", fileName);
 		request.getSession().setAttribute("classNames", classNames);
+		
 		if (theFileAlreadyExists) response.sendRedirect("/offload/management/selectClass.jsp?newFile=0");
 		else response.sendRedirect("/offload/management/selectClass.jsp?newFile=1");
 		
 	}
 
-	private boolean checkValidJarName(String packageName) {
+	private boolean checkValidJarName(String jarName) {
 		
-		if (packageName.equals("asm-4.1.jar") ||
-				packageName.equals("asm-tree-4.1.jar") ||
-				packageName.equals("commons-fileupload-1.3.jar") ||
-				packageName.equals("commons-io-2.4.jar") ||
-				packageName.equals("servlet-api.jar"))	return false;
+		
+		System.out.println("The name is " + jarName);
+		if (jarName.equals("asm-4.1.jar") ||
+				jarName.equals("asm-tree-4.1.jar") ||
+				jarName.equals("commons-fileupload-1.3.jar") ||
+				jarName.equals("commons-io-2.4.jar") ||
+				jarName.equals("servlet-api.jar"))return false;
 		return true;
 		
 	}
