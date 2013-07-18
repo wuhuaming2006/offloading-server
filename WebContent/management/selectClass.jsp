@@ -34,7 +34,7 @@
 			<div id="navigation">
 				<ul>
 					<li><a href="../index.jsp">Home</a></li>
-					<li><a href="#">Management</a></li>
+					<li><a href="./">Management</a></li>
 					<li><a href="../test" rel="nofollow">Test1</a></li>
 					<li><a href="../run?algName=doSomeLoops&param1=20000000" rel="nofollow">Test2</a></li>
 					<li><a href="../contact.jsp">Contact us</a></li>
@@ -56,7 +56,7 @@
 						}
 					}
 				%>
-				<p>In the following box you can find a list with all the Java classes contained in the JAR file that you just uploaded. Please select the class containing the parse of the String input parameters and call to the methods to be executed in this server.</p>
+				<p>In the following box you can find a list with all the Java classes contained within the JAR file that you just uploaded. Please select the special class with the properties described in the previous page.</p>
 				<form method="post" action="updAndCompAlgs">
 				<% 
 					if (classNames.size() < 15) {

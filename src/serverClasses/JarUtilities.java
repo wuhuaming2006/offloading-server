@@ -50,7 +50,7 @@ public class JarUtilities {
 	            } finally {
 	                classFileInputStream.close();
 	            }
-	           return (getMethodsFromClass(classNode));
+	           return getMethodsFromClass(classNode);
 	         }
 	    }
 	    return null;
@@ -65,6 +65,7 @@ public class JarUtilities {
 		for (MethodNode methodNode : methodNodes) {
 			listOfMethods.add(methodNode.name);
 		}
+		listOfMethods.remove(0);
 		return listOfMethods;
 	}
 }

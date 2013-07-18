@@ -44,12 +44,20 @@
     <servlet-name>runAlgs</servlet-name>
     <url-pattern>/run</url-pattern>
   </servlet-mapping>
-   <servlet>
-    <servlet-name>UpdAndCompAlgs</servlet-name>
+  <servlet>
+    <servlet-name>updAndCompAlgs</servlet-name>
     <servlet-class>serverClasses.UpdAndCompAlgs</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>UpdAndCompAlgs</servlet-name>
+    <servlet-name>updAndCompAlgs</servlet-name>
     <url-pattern>/management/updAndCompAlgs</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>generateDB</servlet-name>
+    <servlet-class>serverClasses.GenerateDB</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>generateDB</servlet-name>
+    <url-pattern>/management/generateDB</url-pattern>
   </servlet-mapping>
 </web-app>

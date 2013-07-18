@@ -26,7 +26,7 @@
 			<div id="navigation">
 				<ul>
 					<li><a href="../index.jsp">Home</a></li>
-					<li><a href="#">Management</a></li>
+					<li><a href="./">Management</a></li>
 					<li><a href="../test" rel="nofollow">Test1</a></li>
 					<li><a href="../run?algName=doSomeLoops&param1=20000000" rel="nofollow">Test2</a></li>
 					<li><a href="../contact.jsp">Contact us</a></li>
@@ -35,10 +35,10 @@
 			</div>
 			<div id="content">
 				<h2>Management area - Upload Java classes</h2>
-				<p>Please, select a JAR file from your file system containing the functionalities you would like to upload. The JAR file may contain any number of packages, sub-packages, resources and classes (the .java source files are not needed, only the already compiled .class files). Take into account the following restrictions:</p>
+				<p>Please, select a JAR file from your file system containing the functionalities you would like to upload. The JAR file may contain any number of packages, sub-packages, resources and classes (the .java source files are not needed, only the already compiled .class files are). Take into account the following restrictions:</p>
 				<ul>
 					<li>The server works with Java 1.6, so you are expected to have compiled your classes with this or earlier versions of Java.</li>
-					<li>You must have a special public class. All of its functions must have exactly this header <em>public static String anyMethodName (String... parameters)</em>. Each of this functions will be susceptible to be invoked remotely from the Android device through our engine. In each of them, you must parse all the String input parameters that you expect to receive and then call any other method (having as input the parsed parameters) implementing any functionalities. As the return type is also String, remember that you must convert to String the result of your algorithms.</li>
+					<li>You must have a special public class. All of its functions must have exactly this header <em>public static String anyMethodName (String... parameters)</em>. Each of this functions will be susceptible to be invoked remotely from the Android device through our engine. In each of them, you will have the input parameters as Strings, so you need to parse them to whatever type you expect them to be. As the return type is also String, you must convert to String the result of your algorithms.</li>
 				</ul>
 				<form action="uploadFile" enctype="multipart/form-data" method="post">
 					<p><input id="buttonChooseFile" type="file" name="datafile" size="40" onchange="fileOnChange()"></p>

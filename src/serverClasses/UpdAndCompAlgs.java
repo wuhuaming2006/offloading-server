@@ -57,8 +57,8 @@ public class UpdAndCompAlgs extends HttpServlet {
 			e.printStackTrace();
 		}
 		
-		for (int i = 1; i < methods.size(); i++) FileUtilities.removeAlgorithm(methods.get(i), algorithmsPath);
-		for (int i = 1; i < methods.size(); i++) FileUtilities.addAlgorithm(methods.get(i), selectedClass, algorithmsPath);
+		for (int i = 0; i < methods.size(); i++) FileUtilities.removeAlgorithm(methods.get(i), algorithmsPath);
+		for (int i = 0; i < methods.size(); i++) FileUtilities.addAlgorithm(methods.get(i), selectedClass, algorithmsPath);
 			
 		JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
 		//The -classpath option of this compiler needs the paths to all the .jar files one by one

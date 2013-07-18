@@ -43,9 +43,10 @@
 						for (int i = 0; i < newMethods.size(); i++) {
 							algName = newMethods.get(i);
 				%>
-							<li class="allRight"><%=algName%></li>
+							<li><span class="allRight"><%=algName%></span></li>
 				<%	
 						}
+						session.removeAttribute("newMethods");
 				%>		
 				</ul>
 				<p>You may now request the execution of any of its algorithms; do it like in the following example:</p>
@@ -57,7 +58,7 @@
 				%>
 				<p>Select what to do next:</p>
 				<ul>
-					<li><a href="uploadFile.jsp">Upload JAR file</a></li>
+					<li><a href="uploadFile.jsp">Upload Java classes</a></li>
 					<li><a href="selectAlgs.jsp">Automated cost estimation</a></li>
 				</ul>
 				<br>

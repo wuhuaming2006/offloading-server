@@ -29,8 +29,6 @@ public class UploadFile extends HttpServlet {
 
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		String libsDir = getServletContext().getRealPath(File.separator) + "WEB-INF" + File.separatorChar + "lib" + File.separatorChar;
 
 		if (request.getSession().getAttribute("loginDone") == null) {
 			//"You must log in order to access the management area"
@@ -44,6 +42,8 @@ public class UploadFile extends HttpServlet {
 			response.sendRedirect("/offload/management/error.jsp");
 			return;
 		}
+		
+		String libsDir = getServletContext().getRealPath(File.separator) + "WEB-INF" + File.separatorChar + "lib" + File.separatorChar;
 		
 		DiskFileItemFactory factory = new DiskFileItemFactory();
 		ServletFileUpload upload = new ServletFileUpload(factory);
