@@ -24,6 +24,7 @@ public class Logout extends HttpServlet {
         session.removeAttribute("jarName");
         session.removeAttribute("classNames");
         session.removeAttribute("newMethods");
+        session.removeAttribute("dbReady");
         
         request.setAttribute("loggedOut", true);
         getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);

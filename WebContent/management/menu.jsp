@@ -8,6 +8,7 @@
 	ArrayList<String> newMethods = null;
 	Object auxObject = request.getSession().getAttribute("newMethods");
 	if (auxObject != null) newMethods = (ArrayList<String>) auxObject;
+	Object dbReady = request.getSession().getAttribute("dbReady");
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -24,7 +25,7 @@
 			<div id="navigation">
 				<ul>
 					<li><a href="../index.jsp">Home</a></li>
-					<li><a href="#">Management</a></li>
+					<li><a href="./">Management</a></li>
 					<li><a href="../test" rel="nofollow">Test1</a></li>
 					<li><a href="../run?algName=doSomeLoops&param1=20000000" rel="nofollow">Test2</a></li>
 					<li><a href="../contact.jsp">Contact us</a></li>
@@ -54,6 +55,17 @@
 				<p>You can also use an equivalent POST query.</p>
 				<br>
 				<%	
+					} else if (dbReady != null) {
+				%>
+				<p class="allRight">The database has been successfully generated.</p>
+				<p>Click the following link to download it:</p>
+				<ul>
+					<li><a href="algCosts.db">algCosts.db</a></li>
+				</ul>
+				<p>Now you only need to copy this database to the <em>assets</em> folder of your Android application and you will be almost ready to start using the automated costs estimation system. The last thing will be to implement the same functions that you used to summarize the input parameters of each method into one single numeric value in a certain section of the Algorithms.java file; follow the instructions there for further details.</p>
+				<br>
+				<%
+						session.removeAttribute("dbReady");
 					}
 				%>
 				<p>Select what to do next:</p>

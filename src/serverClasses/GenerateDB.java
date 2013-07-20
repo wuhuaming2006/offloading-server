@@ -1,19 +1,18 @@
 package serverClasses;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintWriter;
+import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -44,15 +43,6 @@ public class GenerateDB extends HttpServlet {
 
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		response.setContentType("text/html");
-        PrintWriter out = response.getWriter();
-        out.println("<html>");
-        out.println("<body>");
-        
-        //TODO in progress...
-        //<p>Click <a href="algCosts.db">here</a> to download the generated database</p>
-        //<p class="error">Work in progress...!</p>
         
 		if (!ServletFileUpload.isMultipartContent(request)) { //The form sent does not have the expected contents
 			//"Invalid access attempt"
@@ -90,45 +80,29 @@ public class GenerateDB extends HttpServlet {
                 
                 String algName = item.getFieldName(); //It will be an AlgName
                 InputStream fileContent = item.getInputStream();
+                BufferedReader fileContentReader = new BufferedReader(new InputStreamReader(fileContent));
+                
                 DbEntry dbEntry;
-                String currentLine;
                 String[] firstAndRest;
                 String[] inputParams;
                 double startTime;
                 
-                for (int i = 0; i < 10; i++) { //TODO for fileContent readLine
-                	currentLine = i*1000000 + "," + i*1000000;
-                	dbEntry = new DbEntry();
-                	firstAndRest = currentLine.split(csvSepChar, 2);
-                	dbEntry.algInputRep = Double.parseDouble(firstAndRest[0]);
-                	inputParams = firstAndRest[1].split(csvSepChar);
-                	dbEntry.algName = AlgName.valueOf(algName);
-                	startTime = ((double) System.nanoTime()) / 1000000.0;
-                    Algorithms.executeServer(dbEntry.algName, inputParams); //We don't care about the result returned
-                    dbEntry.runTimeMs = ((double) System.nanoTime()) / 1000000.0 - startTime;
-                    dbEntries.add(dbEntry);
+                String currentLine = "";
+                while ((currentLine = fileContentReader.readLine()) != null) {
+                	if (currentLine.contains(csvSepChar)) { //Skip empty lines
+                		dbEntry = new DbEntry();
+                    	firstAndRest = currentLine.split(csvSepChar, 2);
+                    	dbEntry.algInputRep = Double.parseDouble(firstAndRest[0]); //FIXME BLOB...
+                    	inputParams = firstAndRest[1].split(csvSepChar);
+                    	dbEntry.algName = AlgName.valueOf(algName);
+                    	startTime = ((double) System.nanoTime()) / 1000000.0;
+                        Algorithms.executeServer(dbEntry.algName, inputParams); //We don't care about the result returned
+                        dbEntry.runTimeMs = GenerateDB.round(((double) System.nanoTime()) / 1000000.0 - startTime, 2);
+                        dbEntries.add(dbEntry);
+                	}
                 }
-                
             }
         }
-        
-        for (int i = 0; i < dbEntries.size(); i++) {
-        	out.println(dbEntries.get(i).algName + " " + dbEntries.get(i).algInputRep + " " + dbEntries.get(i).runTimeMs);
-        }
-	 
-		
-		
-	
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		/*
 		
 		String algCostsDbPath = getServletContext().getRealPath(File.separator) + "management" + File.separatorChar + "algCosts.db";
 		 
@@ -150,16 +124,16 @@ public class GenerateDB extends HttpServlet {
 			
 		    connection = DriverManager.getConnection("jdbc:sqlite:" + algCostsDbPath);
 			statement = connection.createStatement(); //Default query timeout = 3000 seconds
-			statement.executeUpdate("drop table if exists person");
-			statement.executeUpdate("create table person (id integer, name string)");
-			statement.executeUpdate("insert into person values(1, 'leo')");
-			statement.executeUpdate("insert into person values(2, 'yui')");
-			results = statement.executeQuery("select * from person");
-			while(results.next()) { //Read the result set
-				out.println("name = " + results.getString("name"));
-				out.println("id = " + results.getInt("id"));
+			
+			statement.executeUpdate("CREATE TABLE algCostsTable (_id INTEGER PRIMARY KEY, algName TEXT, inputRep BLOB, runTimeMs REAL)");
+			statement.executeUpdate("CREATE TABLE android_metadata (locale TEXT DEFAULT 'en_US')");
+			statement.executeUpdate("INSERT INTO android_metadata VALUES ('en_US')");
+			
+			for (int i = 0; i < dbEntries.size(); i++) {
+				statement.executeUpdate("INSERT INTO algCostsTable (algName, inputRep, runTimeMs) VALUES ('" + dbEntries.get(i).algName +  "', " + dbEntries.get(i).algInputRep + ", " + dbEntries.get(i).runTimeMs + ")");
 			}
 			success = true;
+			
 		} catch (SQLException e) {
 			//"Database error"
 			response.sendRedirect("/offload/management/error.jsp?err=5");
@@ -179,13 +153,12 @@ public class GenerateDB extends HttpServlet {
 		}
 		if (!success) return;
 		
-		*/
-		
-		out.println("</body>");
-		out.println("</html>");
-		
-		//request.getSession().setAttribute("dbReady", true);
-		//response.sendRedirect("/offload/management/menu.jsp");
+		request.getSession().setAttribute("dbReady", true);
+		response.sendRedirect("/offload/management/menu.jsp");
+	}
+	
+	private static double round(double nD, int nDec) {
+	  return Math.round(nD*Math.pow(10,nDec))/Math.pow(10,nDec);
 	}
 	
 }
