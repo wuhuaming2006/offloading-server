@@ -36,8 +36,7 @@ public class UploadFile extends HttpServlet {
 			return;
 		}
 		
-		boolean isMultipartContent = ServletFileUpload.isMultipartContent(request);
-		if (!isMultipartContent) { //The form sent does not have the expected contents
+		if (!ServletFileUpload.isMultipartContent(request)) { //The form sent does not have the expected contents
 			//"Invalid access attempt"
 			response.sendRedirect("/offload/management/error.jsp");
 			return;
@@ -74,17 +73,15 @@ public class UploadFile extends HttpServlet {
 			return;
 		}
 		
-		File jarToUpload = new File(libsDir + fileName);
-		boolean theFileAlreadyExists = jarToUpload.exists();
-	
-		File uploadedFile = new File(libsDir, fileName);
+		File jarDestination = new File(libsDir + fileName);
+		boolean theFileAlreadyExists = jarDestination.exists();
 		try {
-			fileItem.write(uploadedFile);
+			fileItem.write(jarDestination);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		JarFile jFile = new JarFile(uploadedFile);
+		JarFile jFile = new JarFile(jarDestination);
 		ArrayList<String> classNames = null;
 		try {
 			classNames = JarUtilities.getClassNamesInJar(jFile);
@@ -105,7 +102,8 @@ public class UploadFile extends HttpServlet {
 			jarName.equals("asm-tree-4.1.jar") ||
 			jarName.equals("commons-fileupload-1.3.jar") ||
 			jarName.equals("commons-io-2.4.jar") ||
-			jarName.equals("servlet-api.jar")) return false;
+			jarName.equals("servlet-api.jar") ||
+			jarName.equals("sqlite-jdbc-3.7.2.jar")) return false;
 		return true;
 	}
 

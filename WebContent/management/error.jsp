@@ -41,12 +41,12 @@
 					} else if (request.getParameter("err").equals("1")) {
 				%>
 				<p class="error">The .jar file that you are trying to upload does not have a valid name.</p>
-				<p class="error">The names asm-4.1.jar, asm-tree-4.1.jar, commons-fileupload-1.3.jar, commons-io-2.4.jar and servlet-api.jar are not permitted.</p>
+				<p class="error">The names asm-4.1.jar, asm-tree-4.1.jar, commons-fileupload-1.3.jar, commons-io-2.4.jar, servlet-api.jar and sqlite-jdbc-3.7.2.jar are not permitted.</p>
 				<%
 					} else if (request.getParameter("err").equals("2")) {
-						String algName = request.getParameter("filename");
+						String fileName = request.getParameter("filename");
 				%>
-				<p class="error">The file <%=algName%> that you are trying to upload is not a .jar file</p>
+				<p class="error">The file <%=fileName%> that you are trying to upload is not a .jar file</p>
 				<%
 					} else if (request.getParameter("err").equals("3")) {
 				%>
@@ -55,6 +55,27 @@
 					} else if (request.getParameter("err").equals("4")) {
 				%>
 				<p class="error">The WebApp could not be reloaded</p>
+				<%
+					} else if (request.getParameter("err").equals("5")) {
+				%>
+				<p class="error">Database error</p>
+				<%
+					} else if (request.getParameter("err").equals("6")) {
+				%>
+				<p class="error">Could not load the SQLite-JDBC driver using the current class loader. The class org.sqlite.JDBC was not found.</p>
+				<%
+					} else if (request.getParameter("err").equals("7")) {
+				%>
+				<p class="error">Problems releasing database objects</p>
+				<%
+					} else if (request.getParameter("err").equals("8")) {
+						String fileName = request.getParameter("filename");
+				%>
+				<p class="error">The file <%=fileName%> that you are trying to upload is not a .csv file</p>
+				<%
+					} else if (request.getParameter("err").equals("9")) {
+				%>
+				<p class="error">Cannot parse the MultiPart request</p>
 				<%
 					}
 				%>

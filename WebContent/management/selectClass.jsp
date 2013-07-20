@@ -21,8 +21,13 @@
 		<title>Management area - Select the algorithms Java class</title>
 		<script type="text/javascript">
 			function selectOnChange() {
-				if (document.getElementById("classNamesSelect").value == null) document.getElementById("buttonSelectClass").disabled = true; 
-				else document.getElementById("buttonSelectClass").disabled = false;
+				var classNamesSelect = document.getElementById("classNamesSelect");
+				var somethingSelected = false;
+				for (var i = 0; i < classNamesSelect.length; i++) {
+					if (classNamesSelect[i].selected) somethingSelected = true;
+				}
+				if (somethingSelected) document.getElementById("buttonSelectClass").disabled = false; 
+				else document.getElementById("buttonSelectClass").disabled = true;
 			}
 		</script>
 	</head>
