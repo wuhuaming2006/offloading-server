@@ -60,4 +60,12 @@
     <servlet-name>generateDB</servlet-name>
     <url-pattern>/management/generateDB</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>isDbReady</servlet-name>
+    <servlet-class>serverClasses.IsDbReady</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>isDbReady</servlet-name>
+    <url-pattern>/management/isDbReady</url-pattern>
+  </servlet-mapping>
 </web-app>

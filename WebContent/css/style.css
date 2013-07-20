@@ -1,40 +1,34 @@
 @CHARSET "UTF-8";
 
-#container
-{
+#container {
 	margin: 0 30px;
 	background: #fff;
 }
 
-#header
-{
+#header {
 	background: #ccc;
 	padding: 20px;
 }
 
 #header h1 { margin: 0; }
 
-#navigation
-{
+#navigation {
 	float: left;
 	width: 100%;
 	background: #333;
 }
 
-#navigation ul
-{
+#navigation ul {
 	margin: 0;
 	padding: 0;
 }
 
-#navigation ul li
-{
+#navigation ul li {
 	list-style-type: none;
 	display: inline;
 }
 
-#navigation li a
-{
+#navigation li a {
 	display: block;
 	float: left;
 	padding: 5px 10px;
@@ -45,21 +39,18 @@
 
 #navigation li a:hover { background: #383; }
 
-#content
-{
+#content {
 	clear: left;
 	padding: 20px;
 }
 
-#content h2
-{
+#content h2 {
 	color: #000;
 	font-size: 160%;
 	margin: 0 0 .5em;
 }
 
-#footer
-{
+#footer {
 	background: #ccc;
 	text-align: right;
 	padding: 20px;
@@ -73,3 +64,8 @@
 .allRight {
 	color:green;
 }
+
+#waitClock {
+	text-align:center;
+}
+

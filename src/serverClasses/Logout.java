@@ -16,7 +16,7 @@ public class Logout extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	
     	HttpSession session = request.getSession();
-    	// As we don't invalidate the session, we remove all the attributes that the session contains
+    	// As we don't invalidate the session, we remove all the attributes that the session could contain
     	// removeAttribute will do nothing if an attribute doesn't exist
         session.removeAttribute("loginDone");
         session.removeAttribute("userName");
@@ -24,7 +24,6 @@ public class Logout extends HttpServlet {
         session.removeAttribute("jarName");
         session.removeAttribute("classNames");
         session.removeAttribute("newMethods");
-        session.removeAttribute("dbReady");
         
         request.setAttribute("loggedOut", true);
         getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);

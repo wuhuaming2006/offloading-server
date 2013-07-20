@@ -8,7 +8,7 @@
 	ArrayList<String> newMethods = null;
 	Object auxObject = request.getSession().getAttribute("newMethods");
 	if (auxObject != null) newMethods = (ArrayList<String>) auxObject;
-	Object dbReady = request.getSession().getAttribute("dbReady");
+	String dbReady = request.getParameter("dbReady");
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -65,7 +65,6 @@
 				<p>Now you only need to copy this database to the <em>assets</em> folder of your Android application and you will be almost ready to start using the automated costs estimation system. The last thing will be to implement the same functions that you used to summarize the input parameters of each method into one single numeric value in a certain section of the Algorithms.java file; follow the instructions there for further details.</p>
 				<br>
 				<%
-						session.removeAttribute("dbReady");
 					}
 				%>
 				<p>Select what to do next:</p>
