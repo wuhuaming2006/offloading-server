@@ -1,6 +1,8 @@
 package serverClasses;
 
 public class Algorithms {
+	
+	public static final int MAX_REPETITIONS = 20;
 
 	public static enum AlgName {
 		doSomeLoops,

@@ -5,8 +5,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.math.BigInteger;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -35,7 +37,7 @@ public class GenerateDB extends HttpServlet {
 	public static String dbReady = "NO";
 	
 	private class DbEntry {
-		public double algInputRep; //FIXME BLOB...
+		public BigInteger algInputRep;
 		public double runTimeMs;
 		public AlgName algName;
 	}
@@ -125,7 +127,7 @@ public class GenerateDB extends HttpServlet {
 							if (currentLine.contains(csvSepChar)) { //Skip empty lines
 								dbEntry = new DbEntry();
 						    	firstAndRest = currentLine.split(csvSepChar, 2);
-						    	dbEntry.algInputRep = Double.parseDouble(firstAndRest[0]); //FIXME BLOB...
+						    	dbEntry.algInputRep = new BigInteger(firstAndRest[0]);
 						    	inputParams = firstAndRest[1].split(csvSepChar);
 						    	dbEntry.algName = AlgName.valueOf(algName);
 						    	startTime = ((double) System.nanoTime()) / 1000000.0;
@@ -150,7 +152,6 @@ public class GenerateDB extends HttpServlet {
 	        
 			Connection connection = null;
 			Statement statement = null;
-			ResultSet results = null;
 			boolean success = false;
 			try {
 				
@@ -164,13 +165,28 @@ public class GenerateDB extends HttpServlet {
 			    connection = DriverManager.getConnection("jdbc:sqlite:" + algCostsDbPath);
 				statement = connection.createStatement(); //Default query timeout = 3000 seconds
 				
-				statement.executeUpdate("CREATE TABLE algCostsTable (_id INTEGER PRIMARY KEY, algName TEXT, inputRep BLOB, runTimeMs REAL)");
+				statement.executeUpdate("CREATE TABLE algCostsTable (_id INTEGER PRIMARY KEY, algName TEXT, inputRep BLOB, runTimeMs REAL, serverGen INTEGER)");
 				statement.executeUpdate("CREATE TABLE android_metadata (locale TEXT DEFAULT 'en_US')");
 				statement.executeUpdate("INSERT INTO android_metadata VALUES ('en_US')");
 				
+				PreparedStatement psInsert = connection.prepareStatement("INSERT INTO algCostsTable (algName, inputRep, runTimeMs, serverGen) VALUES (?, ?, ?, ?)");
+				String subQuery1 = "(SELECT COUNT(*) FROM algCostsTable WHERE algName=? AND inputRep=?)";
+				String subQuery2 = "(SELECT _id FROM algCostsTable WHERE algName=? AND inputRep=? ORDER BY RANDOM() LIMIT 1)";
+				PreparedStatement psDelete = connection.prepareStatement("DELETE FROM algCostsTable WHERE " + Algorithms.MAX_REPETITIONS + "<=" + subQuery1 + " AND _id=" + subQuery2);
+				
 				for (int i = 0; i < dbEntries.size(); i++) {
-					statement.executeUpdate("INSERT INTO algCostsTable (algName, inputRep, runTimeMs) VALUES ('" + dbEntries.get(i).algName +  "', " + dbEntries.get(i).algInputRep + ", " + dbEntries.get(i).runTimeMs + ")");
+					psDelete.setString(1, dbEntries.get(i).algName.toString());
+					psDelete.setBytes(2, dbEntries.get(i).algInputRep.toByteArray());
+					psDelete.setString(3, dbEntries.get(i).algName.toString());
+					psDelete.setBytes(4, dbEntries.get(i).algInputRep.toByteArray());
+					psDelete.executeUpdate(); //If there are more than Algorithms.MAX_REPETITIONS rows with this inputRep, delete one of them randomly
+					psInsert.setString(1, dbEntries.get(i).algName.toString());
+					psInsert.setBytes(2, dbEntries.get(i).algInputRep.toByteArray());
+					psInsert.setDouble(3, dbEntries.get(i).runTimeMs);
+					psInsert.setInt(4, 1);
+					psInsert.executeUpdate();
 				}
+				
 				success = true;
 				
 			} catch (SQLException e) {
@@ -181,7 +197,6 @@ public class GenerateDB extends HttpServlet {
 				dbReady = "error.jsp?err=6";
 			} finally {
 				try {
-					if (results != null) results.close();
 					if (statement != null) statement.close();
 					if (connection != null) connection.close();
 				} catch (SQLException e) {

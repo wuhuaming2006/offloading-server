@@ -37,14 +37,15 @@
 				<% 
 					if (newMethods != null) {
 				%>
-				<p class="allRight">Successfully recompiled Algorithms.java and restarted the WebApp after adding the following detected methods:</p>
+				<p class="allRight">Successfully recompiled Algorithms.java and restarted the WebApp.</p>
+				<p>The following methods were detected and added:</p>
 				<ul>
 				<%
 				 		String algName;
 						for (int i = 0; i < newMethods.size(); i++) {
 							algName = newMethods.get(i);
 				%>
-							<li><span class="allRight"><%=algName%></span></li>
+							<li><%=algName%></li>
 				<%	
 						}
 						session.removeAttribute("newMethods");
