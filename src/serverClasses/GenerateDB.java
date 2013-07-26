@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.math.BigInteger;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -36,7 +35,7 @@ public class GenerateDB extends HttpServlet {
 	public static String dbReady = "NO";
 	
 	private class DbEntry {
-		public BigInteger algInputRep;
+		public long algInputRep;
 		public double runTimeMs;
 		public AlgName algName;
 	}
@@ -119,6 +118,7 @@ public class GenerateDB extends HttpServlet {
 	                String[] firstAndRest;
 	                String[] inputParams;
 	                double startTime;
+	                double elapsedTime;
 	                
 	                String currentLine = "";
 	                try {
@@ -126,12 +126,18 @@ public class GenerateDB extends HttpServlet {
 							if (currentLine.contains(csvSepChar)) { //Skip empty lines
 								dbEntry = new DbEntry();
 						    	firstAndRest = currentLine.split(csvSepChar, 2);
-						    	dbEntry.algInputRep = new BigInteger(firstAndRest[0]);
+						    	dbEntry.algInputRep = Long.parseLong(firstAndRest[0]);
 						    	inputParams = firstAndRest[1].split(csvSepChar);
 						    	dbEntry.algName = AlgName.valueOf(algName);
-						    	startTime = ((double) System.nanoTime()) / 1000000.0;
-						        Algorithms.executeServer(dbEntry.algName, inputParams); //We don't care about the result returned
-						        dbEntry.runTimeMs = GenerateDB.round(((double) System.nanoTime()) / 1000000.0 - startTime, 2);
+						    	//Execute 3 times, average only the last 2 times
+						    	//(we skip the first because sometimes it has an extra delay because of loading classes)
+						    	for (int i = 0; i < 3; i++) {
+						    		startTime = ((double) System.nanoTime()) / 1000000.0;
+							        Algorithms.executeServer(dbEntry.algName, inputParams); //We don't care about the result returned
+							        elapsedTime = ((double) System.nanoTime()) / 1000000.0 - startTime;
+							        if (i == 1) dbEntry.runTimeMs = elapsedTime;
+							        else if (i == 2) dbEntry.runTimeMs = GenerateDB.round((dbEntry.runTimeMs + elapsedTime) / 2.0, 3);
+						    	}
 						        dbEntries.add(dbEntry);
 							}
 						}
@@ -166,7 +172,8 @@ public class GenerateDB extends HttpServlet {
 			    connection = DriverManager.getConnection("jdbc:sqlite:" + algCostsDbPath);
 				statement = connection.createStatement(); //Default query timeout = 3000 seconds
 				
-				statement.executeUpdate("CREATE TABLE algCostsTable (_id INTEGER PRIMARY KEY, algName TEXT, inputRep BLOB, runTimeMs REAL, serverGen INTEGER)");
+				statement.executeUpdate("CREATE TABLE algCostsTable (_id INTEGER PRIMARY KEY, algName TEXT NOT NULL, inputRep INTEGER NOT NULL, runTimeMs REAL NOT NULL, serverGen INTEGER NOT NULL)");
+				//FIXME statement.executeUpdate("CREATE INDEX inputRepIndex ON algCostsTable (inputRep ASC)");
 				statement.executeUpdate("CREATE TABLE android_metadata (locale TEXT DEFAULT 'en_US')");
 				statement.executeUpdate("INSERT INTO android_metadata VALUES ('en_US')");
 				
@@ -177,12 +184,12 @@ public class GenerateDB extends HttpServlet {
 				
 				for (int i = 0; i < dbEntries.size(); i++) {
 					psDelete.setString(1, dbEntries.get(i).algName.toString());
-					psDelete.setBytes(2, dbEntries.get(i).algInputRep.toByteArray());
+					psDelete.setLong(2, dbEntries.get(i).algInputRep);
 					psDelete.setString(3, dbEntries.get(i).algName.toString());
-					psDelete.setBytes(4, dbEntries.get(i).algInputRep.toByteArray());
+					psDelete.setLong(4, dbEntries.get(i).algInputRep);
 					psDelete.executeUpdate(); //If there are more than Algorithms.MAX_REPETITIONS rows with this inputRep, delete one of them randomly
 					psInsert.setString(1, dbEntries.get(i).algName.toString());
-					psInsert.setBytes(2, dbEntries.get(i).algInputRep.toByteArray());
+					psInsert.setLong(2, dbEntries.get(i).algInputRep);
 					psInsert.setDouble(3, dbEntries.get(i).runTimeMs);
 					psInsert.setInt(4, 1);
 					psInsert.executeUpdate();
