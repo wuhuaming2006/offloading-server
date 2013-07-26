@@ -9,7 +9,6 @@ import java.math.BigInteger;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -152,6 +151,8 @@ public class GenerateDB extends HttpServlet {
 	        
 			Connection connection = null;
 			Statement statement = null;
+			PreparedStatement psInsert = null;
+			PreparedStatement psDelete = null;
 			boolean success = false;
 			try {
 				
@@ -169,10 +170,10 @@ public class GenerateDB extends HttpServlet {
 				statement.executeUpdate("CREATE TABLE android_metadata (locale TEXT DEFAULT 'en_US')");
 				statement.executeUpdate("INSERT INTO android_metadata VALUES ('en_US')");
 				
-				PreparedStatement psInsert = connection.prepareStatement("INSERT INTO algCostsTable (algName, inputRep, runTimeMs, serverGen) VALUES (?, ?, ?, ?)");
 				String subQuery1 = "(SELECT COUNT(*) FROM algCostsTable WHERE algName=? AND inputRep=?)";
 				String subQuery2 = "(SELECT _id FROM algCostsTable WHERE algName=? AND inputRep=? ORDER BY RANDOM() LIMIT 1)";
-				PreparedStatement psDelete = connection.prepareStatement("DELETE FROM algCostsTable WHERE " + Algorithms.MAX_REPETITIONS + "<=" + subQuery1 + " AND _id=" + subQuery2);
+				psDelete = connection.prepareStatement("DELETE FROM algCostsTable WHERE " + Algorithms.MAX_REPETITIONS + "<=" + subQuery1 + " AND _id=" + subQuery2);
+				psInsert = connection.prepareStatement("INSERT INTO algCostsTable (algName, inputRep, runTimeMs, serverGen) VALUES (?, ?, ?, ?)");
 				
 				for (int i = 0; i < dbEntries.size(); i++) {
 					psDelete.setString(1, dbEntries.get(i).algName.toString());
@@ -198,6 +199,8 @@ public class GenerateDB extends HttpServlet {
 			} finally {
 				try {
 					if (statement != null) statement.close();
+					if (psInsert != null) psInsert.close();
+					if (psDelete != null) psDelete.close();
 					if (connection != null) connection.close();
 				} catch (SQLException e) {
 					//"Problems releasing database objects"
