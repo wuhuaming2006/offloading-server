@@ -50,7 +50,7 @@
 				<%
 					} else if (request.getParameter("err").equals("3")) {
 				%>
-				<p class="error">Compiling Algorithms.java failed (after adding the new algorithm case corresponding to your package)</p>
+				<p class="error">Compiling Algorithms.java failed (after adding the new algorithm(s) case(s))</p>
 				<%
 					} else if (request.getParameter("err").equals("4")) {
 				%>

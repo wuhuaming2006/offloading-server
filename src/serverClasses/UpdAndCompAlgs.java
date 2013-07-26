@@ -71,7 +71,7 @@ public class UpdAndCompAlgs extends HttpServlet {
 		//Even with successful compilations, the verbose output is obtained through the OutputStrean err, the third parameter
 		int compilationResult = compiler.run(null, null, errorStream, "-verbose", "-classpath", jarPaths, algorithmsPath);
 		if (compilationResult != 0) {
-			//"Compiling Algorithms.java failed (after adding the new algorithm case corresponding to your package)"
+			//"Compiling Algorithms.java failed (after adding the new algorithm(s) case(s))"
 			response.sendRedirect("/offload/management/error.jsp?err=3");
 			return;
 		}
