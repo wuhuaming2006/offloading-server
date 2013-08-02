@@ -53,7 +53,6 @@ public class FileUtilities {
 					!thisLine.contains("case " + algorithmName + ":") &&
 					!thisLine.contains(algorithmName + "(parameters)"))
 					out.println(thisLine);
-				else System.out.println("A line was deleted");
 			}		
 			out.flush();
 			out.close();

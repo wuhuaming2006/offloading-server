@@ -86,8 +86,10 @@ public class GenerateDB extends HttpServlet {
 		public void run() {
 
 	        String csvSepChar = null;
+	        boolean useIndex = false;
 	        for (FileItem item : items) {
 	        	if (item.getFieldName().equals("sepChar")) csvSepChar = item.getString();
+	        	else if (item.getFieldName().equals("useIndex")) useIndex = true;
 	        }
 	        if (csvSepChar == null) csvSepChar = ","; //Should be set if the form was properly sent, but just in case
 	        
@@ -173,7 +175,7 @@ public class GenerateDB extends HttpServlet {
 				statement = connection.createStatement(); //Default query timeout = 3000 seconds
 				
 				statement.executeUpdate("CREATE TABLE algCostsTable (_id INTEGER PRIMARY KEY, algName TEXT NOT NULL, inputRep INTEGER NOT NULL, runTimeMs REAL NOT NULL, serverGen INTEGER NOT NULL)");
-				//FIXME statement.executeUpdate("CREATE INDEX inputRepIndex ON algCostsTable (inputRep ASC)");
+				if (useIndex) statement.executeUpdate("CREATE INDEX inputRepIndex ON algCostsTable (inputRep ASC)");
 				statement.executeUpdate("CREATE TABLE android_metadata (locale TEXT DEFAULT 'en_US')");
 				statement.executeUpdate("INSERT INTO android_metadata VALUES ('en_US')");
 				

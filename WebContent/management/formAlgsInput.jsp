@@ -67,6 +67,7 @@
 				<%	
 					}
 				%>
+				<p><input type="checkbox" name="useIndex" value="1" checked> Create a table index (recommended if you are uploading large CSV files)</p>
 				<p><input id="uploadCSVs" name="uploadCSVs" type="submit" value="Upload CSV(s)" disabled></p>
 				</form>
 			</div>
