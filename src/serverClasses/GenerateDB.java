@@ -189,7 +189,7 @@ public class GenerateDB extends HttpServlet {
 				for (int i = 0; i < dbTables.size(); i++) {
 					
 					statement.executeUpdate("CREATE TABLE " + dbTables.get(i).algName + " (_id INTEGER PRIMARY KEY, inputRep INTEGER NOT NULL, runTimeMs REAL NOT NULL, serverGen INTEGER NOT NULL)");
-					statement.executeUpdate("CREATE INDEX inputRepIndex ON algCostsTable (inputRep ASC)");
+					statement.executeUpdate("CREATE INDEX " + dbTables.get(i).algName + "InputRepIndex ON " + dbTables.get(i).algName + " (inputRep)");
 					
 					String subQuery1 = "(SELECT COUNT(*) FROM " + dbTables.get(i).algName + " WHERE inputRep=?)";
 					String subQuery2 = "(SELECT _id FROM " + dbTables.get(i).algName + " WHERE inputRep=? ORDER BY RANDOM() LIMIT 1)";
