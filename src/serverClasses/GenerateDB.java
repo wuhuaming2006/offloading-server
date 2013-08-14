@@ -37,7 +37,11 @@ public class GenerateDB extends HttpServlet {
 	private class DbEntry {
 		public long algInputRep;
 		public double runTimeMs;
+	}
+	
+	private class DbTable {
 		public AlgName algName;
+		public ArrayList<DbEntry> dbEntries;
 	}
 
 	@Override
@@ -91,10 +95,14 @@ public class GenerateDB extends HttpServlet {
 	        }
 	        if (csvSepChar == null) csvSepChar = ","; //Should be set if the form was properly sent, but just in case
 	        
-	        ArrayList<DbEntry> dbEntries = new ArrayList<DbEntry>();
+	        ArrayList<DbTable> dbTables = new ArrayList<DbTable>();
+	        DbTable dbTable;
 	        
 	        for (FileItem item : items) {
 	            if (!item.isFormField()) {
+	            	
+	            	dbTable = new DbTable();
+	            	dbTable.dbEntries = new ArrayList<DbEntry>();
 	            	
 	                String fileName = FilenameUtils.getName(item.getName());
 	                String extension = fileName.substring(fileName.length()-4);
@@ -105,6 +113,7 @@ public class GenerateDB extends HttpServlet {
 	        		}
 	                
 	                String algName = item.getFieldName(); //It will be an AlgName
+	                dbTable.algName = AlgName.valueOf(algName);
 	                InputStream fileContent = null;
 					try {
 						fileContent = item.getInputStream();
@@ -128,19 +137,21 @@ public class GenerateDB extends HttpServlet {
 						    	firstAndRest = currentLine.split(csvSepChar, 2);
 						    	dbEntry.algInputRep = Long.parseLong(firstAndRest[0]);
 						    	inputParams = firstAndRest[1].split(csvSepChar);
-						    	dbEntry.algName = AlgName.valueOf(algName);
 						    	//Execute 3 times, average only the last 2 times
 						    	//(we skip the first because sometimes it has an extra delay because of loading classes)
 						    	for (int i = 0; i < 3; i++) {
 						    		startTime = ((double) System.nanoTime()) / 1000000.0;
-							        Algorithms.executeServer(dbEntry.algName, inputParams); //We don't care about the result returned
+							        Algorithms.executeServer(dbTable.algName, inputParams); //We don't care about the result returned
 							        elapsedTime = ((double) System.nanoTime()) / 1000000.0 - startTime;
 							        if (i == 1) dbEntry.runTimeMs = elapsedTime;
 							        else if (i == 2) dbEntry.runTimeMs = GenerateDB.round((dbEntry.runTimeMs + elapsedTime) / 2.0, 3);
 						    	}
-						        dbEntries.add(dbEntry);
+						        dbTable.dbEntries.add(dbEntry);
 							}
 						}
+						
+						dbTables.add(dbTable);
+						
 					//Before executing this in a separate Thread, this was handled by the "throws IOException" of the goGet and goPost methods
 					} catch (NumberFormatException e) {
 						e.printStackTrace();
@@ -172,27 +183,29 @@ public class GenerateDB extends HttpServlet {
 			    connection = DriverManager.getConnection("jdbc:sqlite:" + algCostsDbPath);
 				statement = connection.createStatement(); //Default query timeout = 3000 seconds
 				
-				statement.executeUpdate("CREATE TABLE algCostsTable (_id INTEGER PRIMARY KEY, algName TEXT NOT NULL, inputRep INTEGER NOT NULL, runTimeMs REAL NOT NULL, serverGen INTEGER NOT NULL)");
-				statement.executeUpdate("CREATE INDEX inputRepIndex ON algCostsTable (inputRep ASC)");
 				statement.executeUpdate("CREATE TABLE android_metadata (locale TEXT DEFAULT 'en_US')");
 				statement.executeUpdate("INSERT INTO android_metadata VALUES ('en_US')");
 				
-				String subQuery1 = "(SELECT COUNT(*) FROM algCostsTable WHERE algName=? AND inputRep=?)";
-				String subQuery2 = "(SELECT _id FROM algCostsTable WHERE algName=? AND inputRep=? ORDER BY RANDOM() LIMIT 1)";
-				psDelete = connection.prepareStatement("DELETE FROM algCostsTable WHERE " + Algorithms.MAX_REPETITIONS + "<=" + subQuery1 + " AND _id=" + subQuery2);
-				psInsert = connection.prepareStatement("INSERT INTO algCostsTable (algName, inputRep, runTimeMs, serverGen) VALUES (?, ?, ?, ?)");
-				
-				for (int i = 0; i < dbEntries.size(); i++) {
-					psDelete.setString(1, dbEntries.get(i).algName.toString());
-					psDelete.setLong(2, dbEntries.get(i).algInputRep);
-					psDelete.setString(3, dbEntries.get(i).algName.toString());
-					psDelete.setLong(4, dbEntries.get(i).algInputRep);
-					psDelete.executeUpdate(); //If there are more than Algorithms.MAX_REPETITIONS rows with this inputRep, delete one of them randomly
-					psInsert.setString(1, dbEntries.get(i).algName.toString());
-					psInsert.setLong(2, dbEntries.get(i).algInputRep);
-					psInsert.setDouble(3, dbEntries.get(i).runTimeMs);
-					psInsert.setInt(4, 1);
-					psInsert.executeUpdate();
+				for (int i = 0; i < dbTables.size(); i++) {
+					
+					statement.executeUpdate("CREATE TABLE " + dbTables.get(i).algName + " (_id INTEGER PRIMARY KEY, inputRep INTEGER NOT NULL, runTimeMs REAL NOT NULL, serverGen INTEGER NOT NULL)");
+					statement.executeUpdate("CREATE INDEX inputRepIndex ON algCostsTable (inputRep ASC)");
+					
+					String subQuery1 = "(SELECT COUNT(*) FROM " + dbTables.get(i).algName + " WHERE inputRep=?)";
+					String subQuery2 = "(SELECT _id FROM " + dbTables.get(i).algName + " WHERE inputRep=? ORDER BY RANDOM() LIMIT 1)";
+					psDelete = connection.prepareStatement("DELETE FROM " + dbTables.get(i).algName + " WHERE " + Algorithms.MAX_REPETITIONS + "<=" + subQuery1 + " AND _id=" + subQuery2);
+					psInsert = connection.prepareStatement("INSERT INTO " + dbTables.get(i).algName + " (inputRep, runTimeMs, serverGen) VALUES (?, ?, ?)");
+					
+					for (int j = 0; j < dbTables.get(i).dbEntries.size(); j++) {
+						psDelete.setLong(1, dbTables.get(i).dbEntries.get(j).algInputRep);
+						psDelete.setLong(2, dbTables.get(i).dbEntries.get(j).algInputRep);
+						psDelete.executeUpdate(); //If there are more than Algorithms.MAX_REPETITIONS rows with this inputRep, delete one of them randomly
+						psInsert.setLong(1, dbTables.get(i).dbEntries.get(j).algInputRep);
+						psInsert.setDouble(2, dbTables.get(i).dbEntries.get(j).runTimeMs);
+						psInsert.setBoolean(3, true);
+						psInsert.executeUpdate();
+					}
+					
 				}
 				
 				success = true;
