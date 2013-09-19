@@ -15,8 +15,14 @@
 				<ul>
 					<li><a href="#">Home</a></li>
 					<li><a href="management">Management</a></li>
+					<%
+						if (request.getSession().getAttribute("loginDone") != null) {
+					%>
 					<li><a href="test" rel="nofollow">Test1</a></li>
 					<li><a href="run?algName=doSomeLoops&param1=20000000" rel="nofollow">Test2</a></li>
+					<%
+						}
+					%>
 					<li><a href="contact.jsp">Contact us</a></li>
 					<%
 						if (request.getSession().getAttribute("loginDone") != null) {
@@ -37,9 +43,6 @@
 					}
 				%>
 				<p>Please, enter the Management area if you want to upload Java classes or try the automated cost estimation system.</p>
-				<p>Test1 will return some information about this server.</p>
-				<p>Test2 is an example of calling a method in this server, it will run 20 millions of iterations of a simple looping algorithm.</p>
-				<p>Keep in mind that the XML formatted data returned when clicking on Test1 or Test2 is to be interpreted by computers.</p>
 			</div>
 			<div id="footer">Freie Universität Berlin, 2013</div>
 		</div>
