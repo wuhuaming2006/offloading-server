@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 	if (request.getSession().getAttribute("loginDone") != null) {
-		getServletContext().getRequestDispatcher("/management/menu.jsp").forward(request, response);
+		getServletContext().getRequestDispatcher("/downloads/menu.jsp").forward(request, response);
 		return;
 	}
 %>
@@ -20,8 +20,8 @@
 			<div id="navigation">
 				<ul>
 					<li><a href="../index.jsp">Home</a></li>
-					<li><a href="#">Management</a></li>
-					<li><a href="../downloads">Downloads</a></li>
+					<li><a href="../management/">Management</a></li>
+					<li><a href="#">Downloads</a></li>
 					<li><a href="../contact.jsp">Contact us</a></li>
 				</ul>
 			</div>
@@ -42,8 +42,8 @@
 				<%
 					}
 				%>
-				<form method="post" action="loginCheck">
-					<input type="hidden" name="from" value="management">
+				<form method="post" action="../management/loginCheck">
+					<input type="hidden" name="from" value="downloads">
 					<table border="0" cellspacing="5">
 						<tr>
 							<th align="right">Username:</th>

@@ -15,6 +15,7 @@
 				<ul>
 					<li><a href="#">Home</a></li>
 					<li><a href="management">Management</a></li>
+					<li><a href="downloads">Downloads</a></li>
 					<%
 						if (request.getSession().getAttribute("loginDone") != null) {
 					%>
@@ -42,7 +43,19 @@
 				<%
 					}
 				%>
-				<p>Please, enter the Management area if you want to upload Java classes or try the automated cost estimation system.</p>
+				<p> This is the web interface of the offloading engine project.<p>
+				<p> Please enter the Management area if you wish to:</p>
+				<ul>
+				<li>Upload your own Java classes containing computation expensive methods in order to try the offloading engine for an application of your own.</li>
+				<li>Want to try the automated cost estimation system for a previously uploaded method.</li>
+				</ul>
+				<p> Please enter the Downloads area if you wish to download:</p>
+				<ul>
+				<li>The core files of the offloading engine.</li>
+				<li>The source code and .apk Android files of the applications that were used for the testing of the engine.</li>
+				<li>The source code of this web, which contains the handling of the offloaded tasks by the server as well as the implementation of the functionalities from the Management area.</li>
+				</ul>
+				<p> Due to security reasons, both areas require an identification. Please contact us if you do not know this authentication and you wish to use the offloading engine.</p>
 			</div>
 			<div id="footer">Freie Universität Berlin, 2013</div>
 		</div>

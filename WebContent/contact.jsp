@@ -21,6 +21,7 @@
 				<ul>
 					<li><a href="index.jsp">Home</a></li>
 					<li><a href="management">Management</a></li>
+					<li><a href="downloads">Downloads</a></li>
 					<%
 						if (request.getSession().getAttribute("loginDone") != null) {
 					%>
