@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="serverClasses.Algorithms.AlgName" %>
+<%@ page import="serverClasses.ManagementMethodsDB" %>
 <% 
 	if (request.getSession().getAttribute("loginDone") == null) {
 		getServletContext().getRequestDispatcher("/management/error.jsp").forward(request, response);
@@ -50,7 +50,7 @@
 				<p>The following box lists all the available methods in this server. First, select which one(s) you want to include in the database:</p>
 				<form method="get" action="formAlgsInput.jsp">
 				<% 
-					AlgName[] algNamesEnum = AlgName.values();
+					String[] algNamesEnum = ManagementMethodsDB.getMethodNames();
 					if (algNamesEnum.length < 15) {
 						String algNamesSize = Integer.toString(algNamesEnum.length);
 				%>
@@ -63,7 +63,7 @@
 					}
 					String algName;
 					for (int i = 0; i < algNamesEnum.length; i++) {
-						algName = algNamesEnum[i].toString();
+						algName = algNamesEnum[i];
 				%>
 						<option value="<%=algName%>"><%=algName%></option>
 				<%	

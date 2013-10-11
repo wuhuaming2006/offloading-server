@@ -39,7 +39,7 @@
 				<p>Please, select a JAR library file from your file system containing the functionalities you would like to upload. The JAR file may contain any number of packages, sub-packages, resources and classes (the .java source files are not needed, only the already compiled .class files are). Take into account the following restrictions:</p>
 				<ul>
 					<li>The server works with Java 1.6, so you are expected to have compiled your classes with this or earlier versions of Java.</li>
-					<li>You must have a special public class. All of its functions must have exactly this type of header: <em>public static String anyMethodName (String param1, String param2,..., String paramN)</em>. Each of this functions will be susceptible to be invoked remotely from the Android device through our engine. In each of them, you will have the input parameters as Strings, so you need to parse them to whatever type you expect them to be. As the return type is also String, you must convert to String the result of your algorithms.</li>
+					<li>You must have a special public class. All of its functions must have exactly this type of header: <em>public static String anyMethodName (String param1, String param2, ... , String paramN)</em>. Each of this functions will be susceptible to be invoked remotely from the Android device through our engine. In each of them, you will have the input parameters as Strings, so you need to parse them to whatever type you expect them to be. As the return type is also String, you must convert to String the result of your algorithms.</li>
 				</ul>
 				<form action="uploadFile" enctype="multipart/form-data" method="post">
 					<p><input id="buttonChooseFile" type="file" name="datafile" size="40" onchange="fileOnChange()"></p>

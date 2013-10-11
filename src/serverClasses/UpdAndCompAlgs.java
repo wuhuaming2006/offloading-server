@@ -1,7 +1,6 @@
 package serverClasses;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -13,8 +12,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.tools.JavaCompiler;
-import javax.tools.ToolProvider;
 	
 public class UpdAndCompAlgs extends HttpServlet {
 
@@ -43,11 +40,7 @@ public class UpdAndCompAlgs extends HttpServlet {
 		}
 		String jarName = (String) jarNameObj;
 		
-		String classesDir = getServletContext().getRealPath(File.separator) + "WEB-INF" + File.separatorChar + "classes" + File.separatorChar;
-		String libsDir = getServletContext().getRealPath(File.separator) + "WEB-INF" + File.separatorChar + "lib" + File.separatorChar;
-		String algorithmsPath = classesDir + "serverClasses" + File.separatorChar + "Algorithms.java";
-		
-		File uploadedFile = new File(libsDir, jarName);
+		File uploadedFile = new File(ManagementMethodsDB.libsDir, jarName);
 		JarFile jFile = new JarFile(uploadedFile);
 			
 		ArrayList<String> methods = null;
@@ -57,24 +50,23 @@ public class UpdAndCompAlgs extends HttpServlet {
 			e.printStackTrace();
 		}
 		
-		for (int i = 0; i < methods.size(); i++) FileUtilities.removeAlgorithm(methods.get(i), algorithmsPath);
-		for (int i = 0; i < methods.size(); i++) FileUtilities.addAlgorithm(methods.get(i), selectedClass, algorithmsPath);
-			
-		JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-		//The -classpath option of this compiler needs the paths to all the .jar files one by one
-		String jarPaths = classesDir.substring(0, classesDir.length() - 1); //Probably not needed, the classes directory, but then we can just add ":" + "/path/to/file.jar" again and again
-		File[] listOfFiles = (new File(libsDir)).listFiles();
-		for (int i = 0; i < listOfFiles.length; i++) {
-			if (listOfFiles[i].isFile()) jarPaths += ":" + libsDir + listOfFiles[i].getName();
+		for (int i = 0; i < methods.size(); i++) {
+			String returnCode = ManagementMethodsDB.removeMethod(methods.get(i));
+			if (!returnCode.equals("OK")) {
+				response.sendRedirect("/offload/management/" + returnCode);
+				return;
+			}
 		}
-		FileOutputStream errorStream = new FileOutputStream(classesDir + "serverClasses" + File.separatorChar + "CompilationLogs.txt");
-		//Even with successful compilations, the verbose output is obtained through the OutputStrean err, the third parameter
-		int compilationResult = compiler.run(null, null, errorStream, "-verbose", "-classpath", jarPaths, algorithmsPath);
-		if (compilationResult != 0) {
-			//"Compiling Algorithms.java failed (after adding the new algorithm(s) case(s))"
-			response.sendRedirect("/offload/management/error.jsp?err=3");
-			return;
+		for (int i = 0; i < methods.size(); i++) {
+			String returnCode = ManagementMethodsDB.addMethod(methods.get(i), selectedClass);
+			if (!returnCode.equals("OK")) {
+				response.sendRedirect("/offload/management/" + returnCode);
+				return;
+			}
 		}
+		
+		//TODO tot el seguent es podria petar potser amb carregant la classes amb:
+		//Class.forName(selectedClass);
 		
 		URL url;
 		//FIXME Leave only the first option of this if-else once local testing is not needed anymore

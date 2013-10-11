@@ -38,7 +38,7 @@
 				<% 
 					if (newMethods != null) {
 				%>
-				<p class="allRight">Successfully recompiled Algorithms.java and restarted the WebApp.</p>
+				<p class="allRight">Methods successfully installed.</p>
 				<p>The following methods were detected and added:</p>
 				<ul>
 				<%

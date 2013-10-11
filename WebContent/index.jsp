@@ -55,7 +55,7 @@
 				<li>The source code and .apk Android files of the applications that were used for the testing of the engine.</li>
 				<li>The source code of this web, which contains the handling of the offloaded tasks by the server as well as the implementation of the functionalities from the Management area.</li>
 				</ul>
-				<p> Due to security reasons, both areas require an identification. Please contact us if you do not know this authentication and you wish to use the offloading engine.</p>
+				<p> Due to security reasons, both areas require an identification. Please <a href="contact.jsp">contact us</a> if you do not know this authentication and you wish to use the offloading engine.</p>
 			</div>
 			<div id="footer">Freie Universität Berlin, 2013</div>
 		</div>

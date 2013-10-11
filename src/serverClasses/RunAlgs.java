@@ -9,8 +9,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import serverClasses.Algorithms.AlgName;
-
 public class RunAlgs extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
@@ -37,17 +35,13 @@ public class RunAlgs extends HttpServlet {
         if (params.size() > 0) parameters = params.toArray(new String[params.size()]);
         String result = "";
         
-        double startTime = ((double) System.nanoTime()) / 1000000.0;
-        if (algNameStr != null) {
-        	AlgName algName = AlgName.valueOf(algNameStr);
-        	result = Algorithms.executeServer(algName, parameters);
-        }
-    	double takenTime = ((double) System.nanoTime()) / 1000000.0 - startTime;
+        if (algNameStr != null) result = Algorithms.executeServer(algNameStr, parameters);
 		
 		out.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
 		out.println("<root>");
 		out.println("	<result>" + result + "</result>");
-		out.println("	<runtime>" + takenTime + "</runtime>");
+		out.println("	<runtime>" + Algorithms.lastExecutionTime + "</runtime>");
+		//out.println("<overhead>" + Algorithms.lastExecutionOverhead + "</overhead>");
 		out.println("</root>");
     }
     

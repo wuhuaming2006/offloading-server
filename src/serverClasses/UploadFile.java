@@ -42,8 +42,6 @@ public class UploadFile extends HttpServlet {
 			return;
 		}
 		
-		String libsDir = getServletContext().getRealPath(File.separator) + "WEB-INF" + File.separatorChar + "lib" + File.separatorChar;
-		
 		DiskFileItemFactory factory = new DiskFileItemFactory();
 		ServletFileUpload upload = new ServletFileUpload(factory);
 		
@@ -73,7 +71,7 @@ public class UploadFile extends HttpServlet {
 			return;
 		}
 		
-		File jarDestination = new File(libsDir + fileName);
+		File jarDestination = new File(ManagementMethodsDB.libsDir + fileName);
 		boolean theFileAlreadyExists = jarDestination.exists();
 		try {
 			fileItem.write(jarDestination);

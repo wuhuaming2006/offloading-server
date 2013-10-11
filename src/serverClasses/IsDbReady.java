@@ -18,7 +18,7 @@ public class IsDbReady extends HttpServlet {
 
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.getWriter().print(GenerateDB.dbReady);
+        response.getWriter().print(GenerateCostsDB.dbReady);
 	}
 
 }

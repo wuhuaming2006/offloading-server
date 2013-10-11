@@ -4,6 +4,11 @@
   <welcome-file-list>
     <welcome-file>index.jsp</welcome-file>
   </welcome-file-list>
+  <listener>
+      <listener-class>
+          serverClasses.ManagementMethodsDB
+      </listener-class>
+  </listener>
   <servlet>
     <servlet-name>testServlet</servlet-name>
     <servlet-class>serverClasses.Test</servlet-class>
@@ -54,7 +59,7 @@
   </servlet-mapping>
   <servlet>
     <servlet-name>generateDB</servlet-name>
-    <servlet-class>serverClasses.GenerateDB</servlet-class>
+    <servlet-class>serverClasses.GenerateCostsDB</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>generateDB</servlet-name>

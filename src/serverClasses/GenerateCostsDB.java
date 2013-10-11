@@ -24,9 +24,7 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.FilenameUtils;
 
-import serverClasses.Algorithms.AlgName;
-
-public class GenerateDB extends HttpServlet {
+public class GenerateCostsDB extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -40,7 +38,7 @@ public class GenerateDB extends HttpServlet {
 	}
 	
 	private class DbTable {
-		public AlgName algName;
+		public String algName;
 		public ArrayList<DbEntry> dbEntries;
 	}
 
@@ -112,8 +110,7 @@ public class GenerateDB extends HttpServlet {
 	        			return;
 	        		}
 	                
-	                String algName = item.getFieldName(); //It will be an AlgName
-	                dbTable.algName = AlgName.valueOf(algName);
+	                dbTable.algName = item.getFieldName(); //It will be an AlgName
 	                InputStream fileContent = null;
 					try {
 						fileContent = item.getInputStream();
@@ -144,7 +141,7 @@ public class GenerateDB extends HttpServlet {
 							        Algorithms.executeServer(dbTable.algName, inputParams); //We don't care about the result returned
 							        elapsedTime = ((double) System.nanoTime()) / 1000000.0 - startTime;
 							        if (i == 1) dbEntry.runTimeMs = elapsedTime;
-							        else if (i == 2) dbEntry.runTimeMs = GenerateDB.round((dbEntry.runTimeMs + elapsedTime) / 2.0, 3);
+							        else if (i == 2) dbEntry.runTimeMs = GenerateCostsDB.round((dbEntry.runTimeMs + elapsedTime) / 2.0, 3);
 						    	}
 						        dbTable.dbEntries.add(dbEntry);
 							}
@@ -173,8 +170,9 @@ public class GenerateDB extends HttpServlet {
 			boolean success = false;
 			try {
 				
-				//Avoid loading the SO specific native libraries (which actually were manually removed from the JAR file)
-				//(then the JAR file couldn't be placed in the WebApp "WEB-INF/lib" folder)
+				//Avoid loading the SO specific native libraries, which actually were manually removed from the JAR file
+				//If not, the JAR file should be placed in the general "lib" folder of Tomcat, which we can not access
+				//(instead, we place it in the WebApp "WEB-INF/lib" folder)
 				System.setProperty("sqlite.purejava", "true");
 				
 				//Load the SQLite-JDBC driver using the current class loader
