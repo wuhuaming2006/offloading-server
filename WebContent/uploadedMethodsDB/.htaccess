@@ -7,12 +7,7 @@ IndexIgnore *
 # Unfortunately, with Eclipse we don't find the option to export a WAR file with custom contents in the classes directory
 # Instead, we select "Export source files" when exporting the WAR file, which will export all the .java files
 
-<files *.java>
-	order allow,deny
-	deny from all
-</files>
-
-<files CompilationLogs.txt>
+<files methods.db>
 	order allow,deny
 	deny from all
 </files>
