@@ -62,7 +62,7 @@
 				<p class="allRight">The database has been successfully generated.</p>
 				<p>Click the following link to download it:</p>
 				<ul>
-					<li><a href="algCosts.db">algCosts.db</a></li>
+					<li><a href="../downloadsServlet?fileName=algCosts.db">algCosts.db</a></li>
 				</ul>
 				<p>Now you only need to copy this database to the <em>assets</em> folder of your Android application and you will be almost ready to start using the automated costs estimation system. The last thing will be to implement the same functions that you used to summarize the input parameters of each method into one single numeric value in a certain section of the Algorithms.java file; follow the instructions there for further details.</p>
 				<br>

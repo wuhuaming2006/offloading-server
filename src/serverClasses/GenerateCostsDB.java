@@ -158,7 +158,7 @@ public class GenerateCostsDB extends HttpServlet {
 	            }
 	        }
 			
-			String algCostsDbPath = getServletContext().getRealPath(File.separator) + "management" + File.separatorChar + "algCosts.db";
+			String algCostsDbPath = getServletContext().getRealPath(File.separator) + "WEB-INF" + File.separatorChar + "files" + File.separatorChar + "algCosts.db";
 			 
 			File algCostsDb = new File(algCostsDbPath);
 			if (algCostsDb.exists()) algCostsDb.delete();

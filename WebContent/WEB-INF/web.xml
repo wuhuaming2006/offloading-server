@@ -73,4 +73,12 @@
     <servlet-name>isDbReady</servlet-name>
     <url-pattern>/management/isDbReady</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>downloadsServlet</servlet-name>
+    <servlet-class>serverClasses.DownloadsServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>downloadsServlet</servlet-name>
+    <url-pattern>/downloadsServlet</url-pattern>
+  </servlet-mapping>
 </web-app>

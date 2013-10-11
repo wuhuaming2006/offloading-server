@@ -34,7 +34,7 @@ public class ManagementMethodsDB implements ServletContextListener {
 		
 		//If it did not exist, creates the database
 	    try {
-			connection = DriverManager.getConnection("jdbc:sqlite:" + arg0.getServletContext().getRealPath(File.separator) + "uploadedMethodsDB" + File.separatorChar + "methods.db");
+			connection = DriverManager.getConnection("jdbc:sqlite:" + arg0.getServletContext().getRealPath(File.separator) + "WEB-INF" + File.separatorChar + "uploadedMethodsDB" + File.separatorChar + "methods.db");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

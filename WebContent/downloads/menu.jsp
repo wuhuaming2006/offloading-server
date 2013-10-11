@@ -33,10 +33,10 @@
 				<h2>Downloads area - Main menu</h2>
 				<p>The following files are available to download:</p>
 				<ul>
-					<li>The <a href="files/offloading-engine-core.zip">core files</a> of the offloading engine.</li>
-					<li>The <a href="files/chess-game.zip">source code</a> and <a href="files/ChessGame.apk">.apk Android file</a> of the Chess Game application.</li>
-					<li>The <a href="files/engine-testing.zip">source code</a> and <a href="files/EngineTesting.apk">.apk Android file</a> of the Engine Testing application.</li>
-					<li>The <a href="files/server.zip">source code of this web</a> and the corresponding <a href="files/offload.war">WAR file</a>, which contain the handling of the offloaded tasks by the server as well as the implementation of the functionalities from the Management area.</li>
+					<li>The <a href="../downloadsServlet?fileName=offloading-engine-core.zip">core files</a> of the offloading engine.</li>
+					<li>The <a href="../downloadsServlet?fileName=chess-game.zip">source code</a> and <a href="../downloadsServlet?fileName=ChessGame.apk">.apk Android file</a> of the Chess Game application.</li>
+					<li>The <a href="../downloadsServlet?fileName=engine-testing.zip">source code</a> and <a href="../downloadsServlet?fileName=EngineTesting.apk">.apk Android file</a> of the Engine Testing application.</li>
+					<li>The <a href="../downloadsServlet?fileName=server.zip">source code of this web</a> and the corresponding <a href="../downloadsServlet?fileName=offload.war">WAR file</a>, which contain the handling of the offloaded tasks by the server as well as the implementation of the functionalities from the Management area.</li>
 				</ul>
 				<br>
 			</div>
