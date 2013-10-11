@@ -26,7 +26,7 @@
 				</ul>
 			</div>
 			<div id="content">
-				<h2>Management area - Login</h2>
+				<h2>Management - Login</h2>
 				<%
 					String userName = "";
 					String password = "";
