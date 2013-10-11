@@ -21,7 +21,7 @@
 			<div id="navigation">
 				<ul>
 					<li><a href="../index.jsp">Home</a></li>
-					<li><a href="./">Management</a></li>
+					<li><a href="../management/">Management</a></li>
 					<li><a href="#">Downloads</a></li>
 					<li><a href="../test" rel="nofollow">Test1</a></li>
 					<li><a href="../run?algName=doSomeLoops&param1=20000000" rel="nofollow">Test2</a></li>
